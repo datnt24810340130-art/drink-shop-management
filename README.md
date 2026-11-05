@@ -1,18 +1,44 @@
 # DRINK SHOP MANAGEMENT SYSTEM
 > **Hệ thống Quản lý Quán nước / Trà sữa / Cafe**  
-> Dự án môn học: **Lập trình .NET** - Trường Đại học Điện Lực (EPU)
+> Dự án môn học: **Lập trình .NET** - Khoa Công nghệ Thông tin, Trường Đại học Điện Lực (EPU)
+
+---
+
+### 📋 THÔNG TIN DỰ ÁN & KIẾN TRÚC TỔNG QUAN
+*(Drink Shop Management System, 3-Tier Architecture, Modern Flat UI, ADO.NET Direct SQL Connection & Real-time POS Billing)*
+
+- **Học phần**: Lập trình .NET
+- **Khoa / Trường**: Khoa Công nghệ Thông tin - Trường Đại học Điện Lực (EPU)
+- **Chủ đề lựa chọn**: Hệ thống Quản lý Quán nước / Trà sữa / Cafe (Mô hình dịch vụ F&B - Bán hàng tại bàn & Mang về, Quản lý sơ đồ bàn trực quan, Danh mục thực đơn đồ uống, Hóa đơn thanh toán & Báo cáo doanh thu thời gian thực)
+- **Người soạn thảo**: Nguyễn Thành Đạt (Trưởng nhóm / System Architect)
+- **Người duyệt / Đồng chủ trì đề tài**: Nguyễn Trọng Hiếu & Lê Tuấn Anh
+- **Kiến trúc cốt lõi**: Mô hình 3 lớp phân tầng chuẩn (*Presentation Layer* - GUI WinForms, *Business Logic Layer* - BLL, *Data Access Layer* - DAL, *Data Transfer Objects* - DTO), Kết nối trực tiếp Microsoft SQL Server bằng ADO.NET thuần (`SqlConnection`, `SqlCommand`, `SqlDataReader`, Parameterized Queries phòng chống SQL Injection tuyệt đối), Giao diện phẳng Modern Flat UI tối ưu trải nghiệm người dùng, Sơ đồ bàn trực quan đổi màu theo trạng thái thực tế (*Trống / Có khách / Đã đặt*), Phân quyền bảo mật 2 cấp độ (*Quản trị viên / Nhân viên thu ngân*), Báo cáo thống kê doanh thu & Biểu đồ Chart trực quan.
+- **Tài liệu thiết kế chi tiết**: `README.md` (Phiên bản 1.0 - Hệ thống Quản lý Quán nước EPU)
+
+---
+
+### ☕ BỐI CẢNH & GIỚI THIỆU ĐỀ TÀI (INTRODUCTION)
+Trong bối cảnh thị trường dịch vụ F&B (Food and Beverage) — đặc biệt là ngành kinh doanh đồ uống, trà sữa và cà phê — đang phát triển mạnh mẽ và cạnh tranh gay gắt, việc tối ưu hóa quy trình phục vụ và nâng cao độ chính xác trong vận hành đóng vai trò quyết định đến hiệu quả kinh doanh của mỗi cửa hàng.
+
+Các phương thức quản lý truyền thống (ghi chép sổ sách thủ công, ghi nhớ miệng hoặc sử dụng các bảng tính rời rạc) thường bộc lộ nhiều hạn chế nghiêm trọng:
+- ❌ **Dễ nhầm lẫn order**: Sai lệch định lượng đường/đá, ghi nhầm hoặc sót món của khách trong các khung giờ cao điểm.
+- ❌ **Khó theo dõi trạng thái bàn**: Không nắm bắt trực quan bàn nào còn trống, bàn nào đang có khách hoặc đã đặt trước, gây bất tiện khi xếp chỗ và đổi/gộp bàn.
+- ❌ **Rủi ro thất thoát doanh thu**: Tính toán sai tiền thừa, nhầm lẫn chiết khấu hoặc thiếu công cụ đối soát hóa đơn minh bạch giữa ca làm việc của nhân viên.
+- ❌ **Thiếu báo cáo kinh doanh thời gian thực**: Người quản lý không có cái nhìn tổng quan về doanh thu theo ngày/tháng, không xác định được nhóm đồ uống nào đang bán chạy (Best-sellers) để lập kế hoạch nhập nguyên liệu.
+
+Xuất phát từ thực tiễn trên, **Drink Shop Management System** được nhóm nghiên cứu và xây dựng như một **giải pháp phần mềm quản trị bán hàng toàn diện dành cho các quán đồ uống**. Ứng dụng được phát triển trên nền tảng **C# Windows Forms** với phong cách giao diện phẳng hiện đại (**Modern Flat UI**), kết nối trực tiếp cơ sở dữ liệu **Microsoft SQL Server** qua công nghệ **ADO.NET thuần**. Hệ thống giải quyết trọn vẹn chu trình bán hàng: từ tiếp nhận order, sơ đồ bàn trực quan đổi màu trạng thái, tính toán tự động & in hóa đơn tức thời, đến quản trị danh mục sản phẩm, phân quyền nhân viên và trực quan hóa doanh thu bằng biểu đồ.
 
 ---
 
 ## 📑 MỤC LỤC (TABLE OF CONTENTS)
-- [1. 👥 THÀNH VIÊN THỰC HIỆN DỰ ÁN](#-thành-viên-thực-hiện-dự-án)
-- [2. 🎯 MA TRẬN TRÁCH NHIỆM (RACI MATRIX)](#-ma-trận-trách-nhiệm-raci-matrix)
-- [3. 📌 TỔNG QUAN DỰ ÁN](#-tổng-quan-dự-án)
-  - [3.1. Mục tiêu kỹ thuật & Trải nghiệm](#mục-tiêu-kỹ-thuật--trải-nghiệm)
-- [4. 🏗️ KIẾN TRÚC HỆ THỐNG (3-TIER ARCHITECTURE)](#️-kiến-trúc-hệ-thống-3-tier-architecture)
-- [5. 🗄️ THIẾT KẾ CƠ SỞ DỮ LIỆU (DATABASE SCHEMA)](#️-thiết-kế-cơ-sở-dữ-liệu-database-schema)
-  - [5.1. Sơ đồ quan hệ thực thể (ERD)](#sơ-đồ-quan-hệ-thực-thể-erd)
-- [6. 📅 KẾ HOẠCH TRIỂN KHAI THEO GIAI ĐOẠN (ROADMAP)](#-kế-hoạch-triển-khai-theo-giai-đoạn-roadmap)
+- [1. 👥 THÀNH VIÊN THỰC HIỆN DỰ ÁN](#1--thành-viên-thực-hiện-dự-án)
+- [2. 🎯 MA TRẬN TRÁCH NHIỆM (RACI MATRIX)](#2--ma-trận-trách-nhiệm-raci-matrix)
+- [3. 📌 TỔNG QUAN DỰ ÁN](#3--tổng-quan-dự-án)
+  - [3.1. Mục tiêu kỹ thuật & Trải nghiệm](#31-mục-tiêu-kỹ-thuật--trải-nghiệm)
+- [4. 🏗️ KIẾN TRÚC HỆ THỐNG (3-TIER ARCHITECTURE)](#4-️-kiến-trúc-hệ-thống-3-tier-architecture)
+- [5. 🗄️ THIẾT KẾ CƠ SỞ DỮ LIỆU (DATABASE SCHEMA)](#5-️-thiết-kế-cơ-sở-dữ-liệu-database-schema)
+  - [5.1. Sơ đồ quan hệ thực thể (ERD)](#51-sơ-đồ-quan-hệ-thực-thể-erd)
+- [6. 📅 KẾ HOẠCH TRIỂN KHAI THEO GIAI ĐOẠN (ROADMAP)](#6--kế-hoạch-triển-khai-theo-giai-đoạn-roadmap)
   - [📍 Giai đoạn 1: Khởi tạo Cơ sở dữ liệu & Cấu trúc Solution](#-giai-đoạn-1-khởi-tạo-cơ-sở-dữ-liệu--cấu-trúc-solution)
   - [📍 Giai đoạn 2: Thiết kế Khung giao diện hiện đại & Đăng nhập](#-giai-đoạn-2-thiết-kế-khung-giao-diện-hiện-đại--đăng-nhập)
   - [📍 Giai đoạn 3: Phân hệ Quản lý Danh mục & Sản phẩm (CRUD)](#-giai-đoạn-3-phân-hệ-quản-lý-danh-mục--sản-phẩm-crud)
@@ -20,19 +46,20 @@
   - [📍 Giai đoạn 5: Phân hệ Quản lý Hóa đơn & Nhân viên](#-giai-đoạn-5-phân-hệ-quản-lý-hóa-đơn--nhân-viên)
   - [📍 Giai đoạn 6: Phân hệ Báo cáo Doanh thu & Thống kê](#-giai-đoạn-6-phân-hệ-báo-cáo-doanh-thu--thống-kê)
   - [📍 Giai đoạn 7: Tối ưu hóa, Xử lý lỗi toàn cục & Đóng gói](#-giai-đoạn-7-tối-ưu-hóa-xử-lý-lỗi-toàn-cục--đóng-gói-hoàn-thiện)
-- [7. 🎨 QUY CHUẨN ĐẶT TÊN CONTROL (NAMING CONVENTIONS)](#-quy-chuẩn-đặt-tên-control-naming-conventions)
-- [8. 🛠️ CÔNG NGHỆ & YÊU CẦU MÔI TRƯỜNG](#️-công-nghệ--yêu-cầu-môi-trường)
+- [7. 🎨 QUY CHUẨN ĐẶT TÊN CONTROL (NAMING CONVENTIONS)](#7--quy-chuẩn-đặt-tên-control-naming-conventions)
+- [8. 🛠️ CÔNG NGHỆ & YÊU CẦU MÔI TRƯỜNG](#8-️-công-nghệ--yêu-cầu-môi-trường)
+- [9. 📑 KHUNG ĐỀ CƯƠNG BÁO CÁO ĐỒ ÁN (PROJECT REPORT OUTLINE)](#9--khung-đề-cương-báo-cáo-đồ-án-project-report-outline)
 
 ---
 
-## 👥 THÀNH VIÊN THỰC HIỆN DỰ ÁN
+## 1. 👥 THÀNH VIÊN THỰC HIỆN DỰ ÁN
 1. **Nguyễn Thành Đạt** (Trưởng nhóm / Lead Developer / System Architect)
 2. **Nguyễn Trọng Hiếu** (Core Developer / UI-UX & POS Specialist)
 3. **Lê Tuấn Anh** (Core Developer / Business Logic & Reporting Specialist)
 
 ---
 
-## 🎯 MA TRẬN TRÁCH NHIỆM (RACI MATRIX)
+## 2. 🎯 MA TRẬN TRÁCH NHIỆM (RACI MATRIX)
 
 > **Quy ước chuẩn quốc tế:**
 > - **R (Responsible)**: Người trực tiếp thực hiện công việc.
@@ -56,10 +83,10 @@
 
 ---
 
-## 📌 TỔNG QUAN DỰ ÁN
+## 3. 📌 TỔNG QUAN DỰ ÁN
 **Drink Shop Management System** là ứng dụng desktop xây dựng trên nền tảng **C# Windows Forms** kết hợp cơ sở dữ liệu **Microsoft SQL Server**, giao tiếp trực tiếp qua công nghệ **ADO.NET** (thuần parameterized queries / stored procedures, không dùng ORM, không dùng mock data).
 
-### Mục tiêu kỹ thuật & Trải nghiệm
+### 3.1. Mục tiêu kỹ thuật & Trải nghiệm
 - **Kiến trúc phân lớp chuẩn (3-Layer Architecture)**: Tách bạch rõ ràng giữa Giao diện (Presentation / GUI) - Nghiệp vụ (Business Logic Layer - BLL) - Truy cập dữ liệu (Data Access Layer - DAL) và Đối tượng truyền tải (DTO/Entities).
 - **Giao diện người dùng (UI/UX) hiện đại**: Tối ưu màu sắc hiện đại (Flat UI, Dark/Light accents, bo góc, icon trực quan), sơ đồ bàn tương tác trực quan theo màu trạng thái, thẻ sản phẩm trực quan.
 - **Tính toàn vẹn dữ liệu**: Ràng buộc toàn vẹn cơ sở dữ liệu (Primary Key, Foreign Key, Check Constraints, Cascading Rules) xử lý chặt chẽ tại SQL Server.
@@ -67,7 +94,7 @@
 
 ---
 
-## 🏗️ KIẾN TRÚC HỆ THỐNG (3-TIER ARCHITECTURE)
+## 4. 🏗️ KIẾN TRÚC HỆ THỐNG (3-TIER ARCHITECTURE)
 
 ```
 DrinkShopManagement/
@@ -120,11 +147,11 @@ DrinkShopManagement/
 
 ---
 
-## 🗄️ THIẾT KẾ CƠ SỞ DỮ LIỆU (DATABASE SCHEMA)
+## 5. 🗄️ THIẾT KẾ CƠ SỞ DỮ LIỆU (DATABASE SCHEMA)
 
 Cơ sở dữ liệu: `DrinkShopDB` trên Microsoft SQL Server.
 
-### Sơ đồ quan hệ thực thể (ERD)
+### 5.1. Sơ đồ quan hệ thực thể (ERD)
 
 ```mermaid
 erDiagram
@@ -202,9 +229,7 @@ erDiagram
 
 ---
 
-## 📅 KẾ HOẠCH TRIỂN KHAI THEO GIAI ĐOẠN (ROADMAP)
-
-> **Nguyên tắc triển khai:** Không làm dồn dập, thực hiện tuần tự từng bước: **Database & Kiến trúc -> UI khung -> Từng chức năng CRUD -> Bán hàng POS -> Báo cáo & Thống kê -> Hoàn thiện đóng gói**. Cung cấp đầy đủ mã nguồn cho từng file, hướng dẫn tạo Form và Test cụ thể sau mỗi giai đoạn.
+## 6. 📅 KẾ HOẠCH TRIỂN KHAI THEO GIAI ĐOẠN (ROADMAP)
 
 ### 📍 Giai đoạn 1: Khởi tạo Cơ sở dữ liệu & Cấu trúc Solution
 - [ ] **1.1.** Cài đặt Database `DrinkShopDB` trên SQL Server với kịch bản script đầy đủ bảng, khóa chính, khóa ngoại, chỉ mục (Index) và dữ liệu mẫu khởi đầu (Tài khoản Admin, Danh mục đồ uống, Bàn mẫu).
@@ -273,7 +298,7 @@ erDiagram
 
 ---
 
-## 🎨 QUY CHUẨN ĐẶT TÊN CONTROL (NAMING CONVENTIONS)
+## 7. 🎨 QUY CHUẨN ĐẶT TÊN CONTROL (NAMING CONVENTIONS)
 
 Để cả 3 thành viên phối hợp code đồng bộ, chuyên nghiệp và chuẩn quốc tế, toàn bộ tên Control tuân thủ nghiêm ngặt tiền tố (Prefix) viết tắt và định danh hoàn toàn bằng **tiếng Anh**:
 
@@ -293,9 +318,121 @@ erDiagram
 
 ---
 
-## 🛠️ CÔNG NGHỆ & YÊU CẦU MÔI TRƯỜNG
+## 8. 🛠️ CÔNG NGHỆ & YÊU CẦU MÔI TRƯỜNG
 - **Hệ điều hành**: Windows 10 / 11
 - **Công cụ phát triển**: Visual Studio 2022 (với Workload *.NET desktop development*)
-- **Ngôn ngữ**: C# (.NET Framework 4.8 hoặc .NET 8.0 Windows Forms)
+- **Ngôn ngữ**: C# (.NET Framework 4.8 hoặc .NET 8.0/10.0 Windows Forms)
 - **Hệ quản trị CSDL**: Microsoft SQL Server 2019 / 2022 / SQL Server Express
 - **Công cụ quản lý DB**: SQL Server Management Studio (SSMS)
+
+---
+
+## 9. 📑 KHUNG ĐỀ CƯƠNG BÁO CÁO ĐỒ ÁN (PROJECT REPORT OUTLINE)
+
+> Cấu trúc chuẩn theo mẫu báo cáo đồ án môn học **Lập trình .NET** - Trường Đại học Điện Lực (EPU):
+
+### 📄 CÁC PHẦN ĐẦU (FRONT MATTER)
+- **Trang bìa chính & Trang phụ bìa** (Tên trường, khoa CNTT, tên đề tài, GVHD, SV thực hiện)
+- **Lời cảm ơn**
+- **Nhận xét của Giảng viên hướng dẫn**
+- **Mục lục báo cáo**
+- **Danh mục ký hiệu & Chữ viết tắt** (ADO.NET, CRUD, BLL, DAL, DTO, GUI, ERD, POS,...)
+- **Danh mục Bảng biểu**
+- **Danh mục Hình ảnh & Biểu đồ**
+
+---
+
+### 📖 CHƯƠNG 1: TỔNG QUAN VÀ KHẢO SÁT HIỆN TRẠNG
+- **1.1. Đặt vấn đề và Tính cấp thiết của đề tài**
+  - Thực trạng quản lý thủ công (ghi chép sổ sách, sai sót khi tính tiền, thất thoát doanh thu).
+  - Nhu cầu ứng dụng CNTT vào tự động hóa vận hành quán nước/cafe.
+- **1.2. Mục tiêu và Phạm vi nghiên cứu**
+  - *Mục tiêu*: Xây dựng phần mềm quản lý quán nước hoàn chỉnh, giao diện hiện đại, dễ thao tác.
+  - *Phạm vi*: Áp dụng cho mô hình quán vừa và nhỏ với quy trình gọi món tại bàn, thanh toán tại quầy.
+- **1.3. Khảo sát quy trình nghiệp vụ thực tế**
+  - Quy trình đón khách và chọn bàn.
+  - Quy trình gọi món (Order), thêm topping/ghi chú món.
+  - Quy trình chuyển bàn, gộp bàn.
+  - Quy trình thanh toán hóa đơn và in phiếu tính tiền.
+  - Quy trình kiểm kê cuối ngày và báo cáo doanh thu.
+- **1.4. Phân tích yêu cầu bài toán**
+  - *Yêu cầu chức năng*: Đăng nhập, POS bán hàng, quản lý danh mục/sản phẩm, quản lý bàn, quản lý nhân viên, thống kê.
+  - *Yêu cầu phi chức năng*: Giao diện đẹp, thao tác dưới 3 click, bảo mật mật khẩu, chống SQL Injection, tốc độ phản hồi < 1s.
+
+---
+
+### 📖 CHƯƠNG 2: CƠ SỞ LÝ THUYẾT VÀ CÔNG NGHỆ ÁP DỤNG
+- **2.1. Nền tảng .NET và Ngôn ngữ lập trình C#**
+  - Đặc điểm, tính năng mạnh mẽ và tính hướng đối tượng của C#.
+- **2.2. Công nghệ giao diện Windows Forms (WinForms)**
+  - Cơ chế Event-driven Programming trong WinForms.
+  - Phong cách thiết kế Flat Modern UI (phân phối màu sắc, hiệu ứng tương tác, bo góc).
+- **2.3. Hệ quản trị Cơ sở dữ liệu Microsoft SQL Server**
+  - Vai trò của RDBMS, tính toàn vẹn dữ liệu qua Foreign Key và Transactions.
+- **2.4. Công nghệ kết nối dữ liệu ADO.NET**
+  - Kiến trúc ADO.NET kết nối trực tiếp (`SqlConnection`, `SqlCommand`, `SqlDataReader`, `SqlDataAdapter`).
+  - Kỹ thuật truy vấn an toàn bằng Parameterized Queries phòng chống SQL Injection.
+- **2.5. Kiến trúc phân lớp chuẩn (3-Tier Architecture)**
+  - Tầng trình diễn (Presentation Layer - GUI).
+  - Tầng xử lý nghiệp vụ (Business Logic Layer - BLL).
+  - Tầng truy cập dữ liệu (Data Access Layer - DAL).
+  - Tầng đối tượng truyền tải (Data Transfer Object - DTO).
+
+---
+
+### 📖 CHƯƠNG 3: PHÂN TÍCH VÀ THIẾT KẾ HỆ THỐNG
+- **3.1. Phân tích chức năng hệ thống**
+  - Biểu đồ Use Case tổng quát toàn hệ thống.
+  - Biểu đồ Use Case phân rã cho từng tác nhân (Quản trị viên / Nhân viên thu ngân).
+  - Đặc tả chi tiết các Use Case trọng tâm (Đăng nhập, Gọi món tại bàn, Thanh toán hóa đơn).
+- **3.2. Thiết kế Cơ sở dữ liệu**
+  - Sơ đồ quan hệ thực thể (ERD).
+  - Chuyển đổi mô hình ERD sang mô hình quan hệ (Relational Schema).
+  - Đặc tả chi tiết các bảng (`Roles`, `Users`, `Categories`, `Products`, `Tables`, `Orders`, `OrderDetails`).
+  - Các ràng buộc toàn vẹn, chỉ mục (Index) tối ưu hóa tốc độ truy vấn.
+- **3.3. Thiết kế luồng xử lý (Sequence Diagrams)**
+  - Biểu đồ tuần tự ca sử dụng: Đăng nhập hệ thống.
+  - Biểu đồ tuần tự ca sử dụng: Đặt món & Lưu order vào bàn.
+  - Biểu đồ tuần tự ca sử dụng: Thanh toán hóa đơn & In hóa đơn.
+- **3.4. Thiết kế Giao diện người dùng (Wireframe / Mockup)**
+  - Bố cục Master Layout: Header + Sidebar + Dynamic Content Host.
+  - Thiết kế màn hình POS bán hàng chia 3 cột trực quan.
+
+---
+
+### 📖 CHƯƠNG 4: CÀI ĐẶT VÀ THỰC NGHIỆM HỆ THỐNG
+- **4.1. Môi trường triển khai và Cấu hình kết nối**
+  - Hướng dẫn cấu hình chuỗi kết nối trong `App.config`.
+  - Cài đặt lớp dùng chung `DatabaseHelper.cs`.
+- **4.2. Cài đặt các tầng nghiệp vụ (DAL & BLL)**
+  - Hiện thực hóa các phương thức CRUD và kiểm tra logic dữ liệu.
+- **4.3. Hiện thực hóa các phân hệ giao diện**
+  - 4.3.1. Phân hệ Đăng nhập & Lưu phiên làm việc (`FrmLogin`, `UserSession`).
+  - 4.3.2. Phân hệ Khung giao diện chính & Thẻ KPI Dashboard (`FrmMain`, `FrmDashboard`).
+  - 4.3.3. Phân hệ Quản lý Danh mục & Sản phẩm đồ uống (`FrmCategory`, `FrmProduct`).
+  - 4.3.4. Phân hệ Bán hàng POS & Sơ đồ bàn thời gian thực (`FrmPOS`, `FrmTable`).
+  - 4.3.5. Phân hệ Quản lý Lịch sử Hóa đơn & In ấn (`FrmInvoice`).
+  - 4.3.6. Phân hệ Quản lý Tài khoản & Phân quyền Nhân viên (`FrmEmployee`).
+  - 4.3.7. Phân hệ Báo cáo Doanh thu & Biểu đồ Chart (`FrmStatistic`).
+- **4.4. Kiểm thử hệ thống (Software Testing)**
+  - Xây dựng bảng kịch bản kiểm thử (Test Cases) cho từng chức năng.
+  - Kết quả kiểm thử thực tế và đánh giá độ ổn định.
+
+---
+
+### 📖 CHƯƠNG 5: KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN
+- **5.1. Kết quả đạt được**
+  - Mức độ hoàn thành các chức năng theo yêu cầu đề bài.
+  - Giao diện đạt độ thẩm mỹ, hiện đại và tính ứng dụng thực tế.
+- **5.2. Hạn chế của hệ thống**
+  - Hệ thống mới chạy trên nền Desktop Windows nội bộ (LAN).
+- **5.3. Hướng phát triển trong tương lai**
+  - Tích hợp cổng thanh toán trực tuyến / VietQR sinh mã động theo số tiền hóa đơn.
+  - Mở rộng phân hệ Quản lý kho nguyên vật liệu và định lượng công thức đồ uống.
+  - Xây dựng Mobile App cho nhân viên phục vụ order trực tiếp tại bàn.
+
+---
+
+### 📚 TÀI LIỆU THAM KHẢO & PHỤ LỤC
+- Các tài liệu giáo trình Lập trình .NET, tài liệu Microsoft Learn về C# & ADO.NET.
+- Phụ lục: Mã nguồn các Stored Procedures chính và kịch bản cơ sở dữ liệu.
