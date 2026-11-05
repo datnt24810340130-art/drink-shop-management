@@ -4,6 +4,27 @@
 
 ---
 
+## 📑 MỤC LỤC (TABLE OF CONTENTS)
+- [1. 👥 THÀNH VIÊN THỰC HIỆN DỰ ÁN](#-thành-viên-thực-hiện-dự-án)
+- [2. 🎯 MA TRẬN TRÁCH NHIỆM (RACI MATRIX)](#-ma-trận-trách-nhiệm-raci-matrix)
+- [3. 📌 TỔNG QUAN DỰ ÁN](#-tổng-quan-dự-án)
+  - [3.1. Mục tiêu kỹ thuật & Trải nghiệm](#mục-tiêu-kỹ-thuật--trải-nghiệm)
+- [4. 🏗️ KIẾN TRÚC HỆ THỐNG (3-TIER ARCHITECTURE)](#️-kiến-trúc-hệ-thống-3-tier-architecture)
+- [5. 🗄️ THIẾT KẾ CƠ SỞ DỮ LIỆU (DATABASE SCHEMA)](#️-thiết-kế-cơ-sở-dữ-liệu-database-schema)
+  - [5.1. Sơ đồ quan hệ thực thể (ERD)](#sơ-đồ-quan-hệ-thực-thể-erd)
+- [6. 📅 KẾ HOẠCH TRIỂN KHAI THEO GIAI ĐOẠN (ROADMAP)](#-kế-hoạch-triển-khai-theo-giai-đoạn-roadmap)
+  - [📍 Giai đoạn 1: Khởi tạo Cơ sở dữ liệu & Cấu trúc Solution](#-giai-đoạn-1-khởi-tạo-cơ-sở-dữ-liệu--cấu-trúc-solution)
+  - [📍 Giai đoạn 2: Thiết kế Khung giao diện hiện đại & Đăng nhập](#-giai-đoạn-2-thiết-kế-khung-giao-diện-hiện-đại--đăng-nhập)
+  - [📍 Giai đoạn 3: Phân hệ Quản lý Danh mục & Sản phẩm (CRUD)](#-giai-đoạn-3-phân-hệ-quản-lý-danh-mục--sản-phẩm-crud)
+  - [📍 Giai đoạn 4: Phân hệ Bán hàng POS & Quản lý Bàn nước](#-giai-đoạn-4-phân-hệ-bán-hàng-pos--quản-lý-bàn-nước-trọng-tâm)
+  - [📍 Giai đoạn 5: Phân hệ Quản lý Hóa đơn & Nhân viên](#-giai-đoạn-5-phân-hệ-quản-lý-hóa-đơn--nhân-viên)
+  - [📍 Giai đoạn 6: Phân hệ Báo cáo Doanh thu & Thống kê](#-giai-đoạn-6-phân-hệ-báo-cáo-doanh-thu--thống-kê)
+  - [📍 Giai đoạn 7: Tối ưu hóa, Xử lý lỗi toàn cục & Đóng gói](#-giai-đoạn-7-tối-ưu-hóa-xử-lý-lỗi-toàn-cục--đóng-gói-hoàn-thiện)
+- [7. 🎨 QUY CHUẨN ĐẶT TÊN CONTROL (NAMING CONVENTIONS)](#-quy-chuẩn-đặt-tên-control-naming-conventions)
+- [8. 🛠️ CÔNG NGHỆ & YÊU CẦU MÔI TRƯỜNG](#️-công-nghệ--yêu-cầu-môi-trường)
+
+---
+
 ## 👥 THÀNH VIÊN THỰC HIỆN DỰ ÁN
 1. **Nguyễn Thành Đạt** (Trưởng nhóm / Lead Developer / System Architect)
 2. **Nguyễn Trọng Hiếu** (Core Developer / UI-UX & POS Specialist)
