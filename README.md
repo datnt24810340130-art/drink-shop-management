@@ -1,315 +1,198 @@
-# DRINK SHOP MANAGEMENT SYSTEM
-> **Hệ thống Quản lý Quán nước / Trà sữa / Cafe**  
-> Dự án môn học: **Lập trình .NET** - Khoa Công nghệ Thông tin, Trường Đại học Điện Lực (EPU)
+# Drink Shop Management System
+
+Phần mềm quản lý quán nước (trà sữa, cà phê) được xây dựng bằng **C# Windows Forms**, nền tảng **.NET** và cơ sở dữ liệu **Microsoft SQL Server**. Dự án phục vụ đồ án môn **Lập trình .NET** - Khoa Công nghệ Thông tin, Trường Đại học Điện Lực (EPU), được phát triển theo nhóm 3 thành viên:
+- **Nguyễn Thành Đạt** (Trưởng nhóm / Phụ trách Hệ thống & Kiến trúc)
+- **Nguyễn Trọng Hiếu** (Thành viên / Phụ trách Bán hàng POS & Bàn nước)
+- **Lê Tuấn Anh** (Thành viên / Phụ trách Quản lý Thực đơn & Báo cáo)
+
+> ⚠️ **Lưu ý quan trọng:** Trước khi bắt đầu code, cả nhóm cần thống nhất phiên bản .NET mục tiêu (.NET 8.0 Windows Desktop), phiên bản SQL Server, tên namespace `DrinkShop` và cấu trúc Solution. Không tự ý thay đổi các quy ước này khi chưa trao đổi và thống nhất với cả nhóm.
 
 ---
 
-### 📋 THÔNG TIN DỰ ÁN & KIẾN TRÚC TỔNG QUAN
-*(Drink Shop Management System, 3-Tier Architecture, Modern Flat UI, ADO.NET Direct SQL Connection & Real-time POS Billing)*
+## 1. Mục tiêu dự án
+Xây dựng ứng dụng desktop hỗ trợ các nghiệp vụ quản lý bán hàng cơ bản và chuyên nghiệp cho một quán nước:
+- Đăng nhập, phân quyền và quản lý tài khoản nhân viên.
+- Quản lý danh mục đồ uống và danh sách sản phẩm (kèm hình ảnh minh họa).
+- Quản lý sơ đồ bàn trực quan theo trạng thái phục vụ (*Trống*, *Có khách*, *Đã đặt*).
+- Lập order bán hàng tại bàn (POS), hỗ trợ ghi chú định lượng (đường/đá/topping).
+- Xử lý chuyển bàn, gộp bàn khi khách đổi chỗ.
+- Lập hóa đơn, tính chiết khấu, tính tiền thừa và in phiếu tính tiền.
+- Báo cáo doanh thu theo ngày/tháng/năm và thống kê top sản phẩm bán chạy kèm biểu đồ.
 
-- **Học phần**: Lập trình .NET
-- **Khoa / Trường**: Khoa Công nghệ Thông tin - Trường Đại học Điện Lực (EPU)
-- **Chủ đề lựa chọn**: Hệ thống Quản lý Quán nước / Trà sữa / Cafe (Mô hình chuỗi F&B - Bán hàng tại bàn & Mang về, Quản lý sơ đồ bàn trực quan, Danh mục thực đơn đồ uống, Hóa đơn thanh toán & Báo cáo doanh thu thời gian thực)
-- **Người soạn thảo**: Nguyễn Thành Đạt (Trưởng nhóm / System Architect / Lead Developer)
-- **Người duyệt / Đồng chủ trì đề tài**: Nguyễn Trọng Hiếu & Lê Tuấn Anh
-- **Kiến trúc cốt lõi**: Mô hình 3 lớp phân tầng chuẩn (*Presentation Layer* - GUI WinForms, *Business Logic Layer* - BLL, *Data Access Layer* - DAL, *Data Transfer Objects* - DTO), Kết nối trực tiếp Microsoft SQL Server bằng ADO.NET thuần (`SqlConnection`, `SqlCommand`, `SqlDataReader`, Parameterized Queries phòng chống SQL Injection tuyệt đối), Giao diện phẳng Modern Flat UI tối ưu trải nghiệm người dùng, Sơ đồ bàn trực quan đổi màu theo trạng thái thực tế (*Trống / Có khách / Đã đặt*), Phân quyền bảo mật 2 cấp độ (*Quản trị viên / Nhân viên thu ngân*), Báo cáo thống kê doanh thu & Biểu đồ Chart trực quan.
-- **Tài liệu thiết kế chi tiết**: `README.md` (Phiên bản 2.0 - Hệ thống Quản lý Quán nước EPU)
-
-> ⚠️ **LƯU Ý QUAN TRỌNG CHO CẢ NHÓM:**  
-> Trước khi bắt đầu viết code, cả 3 thành viên cần thống nhất tuyệt đối phiên bản .NET mục tiêu (.NET 8.0 Windows Desktop), phiên bản SQL Server, tên namespace `DrinkShop` và cấu trúc Solution 3 lớp. Không tự ý thay đổi các quy ước này khi chưa họp và trao đổi thống nhất trong nhóm.
+Phạm vi ban đầu được thiết kế ở mức vừa phải, chặt chẽ để cả nhóm 3 người có thể hoàn thành, tích hợp và kiểm thử đúng hạn.
 
 ---
 
-### ☕ BỐI CẢNH & GIỚI THIỆU ĐỀ TÀI (INTRODUCTION)
-Trong bối cảnh thị trường dịch vụ F&B (Food and Beverage) — đặc biệt là ngành kinh doanh đồ uống, trà sữa và cà phê — đang phát triển mạnh mẽ và cạnh tranh ngày càng gay gắt, việc tối ưu hóa quy trình phục vụ và nâng cao độ chính xác trong vận hành đóng vai trò quyết định đến hiệu quả kinh doanh của mỗi cửa hàng.
+## 2. Công nghệ sử dụng
 
-Các phương thức quản lý truyền thống (ghi chép sổ sách thủ công, ghi nhớ miệng hoặc sử dụng các bảng tính rời rạc) thường bộc lộ nhiều hạn chế nghiêm trọng:
-- ❌ **Dễ nhầm lẫn order**: Sai lệch định lượng đường/đá, ghi nhầm hoặc sót món của khách trong các khung giờ cao điểm.
-- ❌ **Khó theo dõi trạng thái bàn**: Không nắm bắt trực quan bàn nào còn trống, bàn nào đang có khách hoặc đã đặt trước, gây bất tiện khi xếp chỗ và đổi/gộp bàn.
-- ❌ **Rủi ro thất thoát doanh thu**: Tính toán sai tiền thừa, nhầm lẫn chiết khấu hoặc thiếu công cụ đối soát hóa đơn minh bạch giữa ca làm việc của nhân viên.
-- ❌ **Thiếu báo cáo kinh doanh thời gian thực**: Người quản lý không có cái nhìn tổng quan về doanh thu theo ngày/tháng, không xác định được nhóm đồ uống nào đang bán chạy (Best-sellers) để lập kế hoạch nhập nguyên liệu.
+| Thành phần | Công nghệ lựa chọn |
+| :--- | :--- |
+| **Ngôn ngữ** | C# (10.0 / 12.0) |
+| **Giao diện** | Windows Forms (WinForms) với phong cách Modern Flat UI |
+| **Nền tảng** | .NET 8.0 Windows Desktop (LTS) |
+| **Cơ sở dữ liệu** | Microsoft SQL Server 2019 / 2022 / SQL Express |
+| **Công cụ quản trị DB** | SQL Server Management Studio (SSMS) |
+| **Kết nối DB** | ADO.NET thuần (`Microsoft.Data.SqlClient`), Parameterized Queries |
+| **IDE** | Visual Studio 2022 Community (Workload: *.NET desktop development*) |
+| **Quản lý mã nguồn** | Git và GitHub |
 
-Xuất phát từ thực tiễn trên, **Drink Shop Management System** được nhóm nghiên cứu và xây dựng như một **giải pháp phần mềm quản trị bán hàng toàn diện dành cho các quán đồ uống**. Ứng dụng được phát triển trên nền tảng **C# Windows Forms** với phong cách giao diện phẳng hiện đại (**Modern Flat UI**), kết nối trực tiếp cơ sở dữ liệu **Microsoft SQL Server** qua công nghệ **ADO.NET thuần**. Hệ thống giải quyết trọn vẹn chu trình bán hàng: từ tiếp nhận order, sơ đồ bàn trực quan đổi màu trạng thái, tính toán tự động & in hóa đơn tức thời, đến quản trị danh mục sản phẩm, phân quyền nhân viên và trực quan hóa doanh thu bằng biểu đồ.
-
----
-
-## 📑 MỤC LỤC (TABLE OF CONTENTS)
-- [1. 👥 THÀNH VIÊN THỰC HIỆN & MA TRẬN TRÁCH NHIỆM (RACI MATRIX)](#1--thành-viên-thực-hiện--ma-trận-trách-nhiệm-raci-matrix)
-- [2. 📌 MỤC TIÊU DỰ ÁN & PHẠM VI NGHIỆP VỤ](#2--mục-tiêu-dự-án--phạm-vi-nghiệp-vụ)
-- [3. 🛠️ CÔNG NGHỆ SỬ DỤNG](#3-️-công-nghệ-sử-dụng)
-- [4. 🍵 DANH MỤC THỰC ĐƠN ĐỒ UỐNG KHỞI TẠO (INITIAL MENU DEMO)](#4--danh-mục-thực-đơn-đồ-uống-khởi-tạo-initial-menu-demo)
-- [5. 🏗️ CẤU TRÚC SOLUTION & Ý NGHĨA CÁC TẦNG (3-TIER ARCHITECTURE)](#5-️-cấu-trúc-solution--ý-nghĩa-các-tầng-3-tier-architecture)
-- [6. 🗄️ CƠ SỞ DỮ LIỆU DÙNG CHUNG & THIẾT KẾ SCHEMA (ERD)](#6-️-cơ-sở-dữ-liệu-dùng-chung--thiết-kế-schema-erd)
-- [7. 🔄 QUY TRÌNH NGHIỆP VỤ CỐT LÕI (POS & TABLE ORDER FLOW)](#7--quy-trình-nghiệp-vụ-cốt-lõi-pos--table-order-flow)
-- [8. 📅 KẾ HOẠCH TRIỂN KHAI THEO GIAI ĐOẠN (ROADMAP)](#8--kế-hoạch-triển-khai-theo-giai-đoạn-roadmap)
-- [9. 🐙 QUY ƯỚC GIT & GITHUB WORKFLOW CHO NHÓM](#9--quy-ước-git--github-workflow-cho-nhóm)
-- [10. 🖼️ QUY TRÌNH TÍCH HỢP FORM LÊN MASTER UI](#10-️-quy-trình-tích-hợp-form-lên-master-ui)
-- [11. 🎨 QUY CHUẨN ĐẶT TÊN CONTROL & CODE CONVENTIONS](#11--quy-chuẩn-đặt-tên-control--code-conventions)
-- [12. 📋 CHECKLIST KIỂM THỬ TRƯỚC KHI BÀN GIAO](#12--checklist-kiểm-thử-trước-khi-bàn-giao)
-- [13. 🚀 HƯỚNG DẪN CÀI ĐẶT VÀ CHẠY DỰ ÁN (SETUP & RUN GUIDE)](#13--hướng-dẫn-cài-đặt-và-chạy-dự-án-setup--run-guide)
-- [14. 🤝 NGUYÊN TẮC PHỐI HỢP LÀM VIỆC NHÓM](#14--nguyên-tắc-phối-hợp-làm-việc-nhóm)
-- [15. 📑 KHUNG ĐỀ CƯƠNG BÁO CÁO ĐỒ ÁN (PROJECT REPORT OUTLINE - CHUẨN EPU)](#15--khung-đề-cương-báo-cáo-đồ-án-project-report-outline---chuẩn-epu)
+*Tất cả thành viên bắt buộc dùng cùng phiên bản Visual Studio và .NET phù hợp với Solution để tránh lỗi tương thích khi build.*
 
 ---
 
-## 1. 👥 THÀNH VIÊN THỰC HIỆN & MA TRẬN TRÁCH NHIỆM (RACI MATRIX)
+## 3. Phạm vi chức năng và phân công
 
-### 1.1. Danh sách thành viên
-1. **Nguyễn Thành Đạt** (Trưởng nhóm / System Architect / Lead Developer)
-   - Phụ trách kiến trúc hệ thống 3 lớp, thiết kế Database schema chính, xây dựng core DAL (`DatabaseHelper.cs`), điều phối Git repository, tích hợp và kiểm thử tổng thể.
-2. **Nguyễn Trọng Hiếu** (Core Developer / UI-UX & POS Specialist)
-   - Phụ trách thiết kế giao diện chính (`FrmMain`, Sidebar), phân hệ Bán hàng POS (`FrmPOS`), phân hệ Quản lý sơ đồ bàn (`FrmTable`), phân hệ Hóa đơn & In ấn (`FrmInvoice`).
-3. **Lê Tuấn Anh** (Core Developer / Business Logic & Reporting Specialist)
-   - Phụ trách phân hệ Quản lý Danh mục & Sản phẩm đồ uống (`FrmCategory`, `FrmProduct`), Quản lý tài khoản nhân viên & phân quyền (`FrmEmployee`), Dashboard tổng quan & Báo cáo doanh thu biểu đồ (`FrmStatistic`, `FrmDashboard`).
+### 👤 Thành viên 1: Nguyễn Thành Đạt — Hệ thống & Nền tảng
+- `FrmLogin`: Đăng nhập, xác thực tài khoản và lưu phiên làm việc.
+- `FrmMain`: Màn hình chính, thanh điều hướng (Sidebar) và cơ chế nhúng Form con vào Content Panel.
+- `FrmNhanVien`: Quản lý danh sách nhân viên, tài khoản và phân quyền (Admin / Thu ngân).
+- **Trách nhiệm kỹ thuật**: Thiết kế kiến trúc 3 lớp, xây dựng `DatabaseHelper.cs`, quản lý file schema SQL Server, điều phối GitHub repository, thiết lập quy ước code, tích hợp và kiểm thử tổng thể.
 
-### 1.2. Ma trận Trách nhiệm (RACI Matrix)
+### 👤 Thành viên 2: Nguyễn Trọng Hiếu — Bán hàng POS & Bàn nước
+- `FrmBan`: Quản lý danh sách và sơ đồ bàn (thêm, sửa, xóa, đổi trạng thái bàn).
+- `FrmBanHang` (hoặc `FrmPOS`): Giao diện bán hàng trực quan (sơ đồ bàn đổi màu, menu chọn món nhanh, giỏ hàng, tăng/giảm số lượng, ghi chú đường/đá).
+- `FrmHoaDon`: Quản lý danh sách hóa đơn, xem chi tiết hóa đơn cũ, thanh toán và in phiếu tính tiền.
+- **Nghiệp vụ phối hợp**: Xử lý chuyển bàn, gộp bàn và áp dụng giao dịch `SqlTransaction` khi thanh toán.
 
-> **Quy ước chuẩn quốc tế:**
-> - **R (Responsible)**: Người trực tiếp thực hiện công việc.
-> - **A (Accountable)**: Người chịu trách nhiệm chính, kiểm tra và nghiệm thu sản phẩm.
-> - **C (Consulted)**: Người hỗ trợ, cố vấn chuyên môn, phối hợp thực hiện.
-> - **I (Informed)**: Người được thông báo tiến độ, kết quả công việc.
+### 👤 Thành viên 3: Lê Tuấn Anh — Thực đơn & Báo cáo Thống kê
+- `FrmDanhMuc`: Quản lý danh mục đồ uống (thêm, sửa, xóa, tìm kiếm danh mục).
+- `FrmSanPham`: Quản lý sản phẩm đồ uống (thêm, sửa, xóa, upload ảnh món, định dạng giá bán VNĐ).
+- `FrmThongKe`: Màn hình Dashboard KPI, thống kê doanh thu theo mốc thời gian, bảng xếp hạng Top 5 đồ uống bán chạy nhất và trực quan hóa bằng biểu đồ Chart.
 
-| STT | Giai đoạn / Module chức năng | Nguyễn Thành Đạt | Nguyễn Trọng Hiếu | Lê Tuấn Anh |
-| :---: | :--- | :---: | :---: | :---: |
-| **1** | **Khởi tạo kiến trúc 3 lớp & Database (`DrinkShopDB`)** | **A / R** | C | C |
-| **2** | **Xây dựng Data Access Layer (`DatabaseHelper.cs`) & DTOs** | **A / R** | I | I |
-| **3** | **Thiết kế UI Khung Master (`FrmMain`, Sidebar điều hướng)** | A | **R** | C |
-| **4** | **Phân hệ Đăng nhập, Xác thực & Phân quyền (`FrmLogin`)** | **A / R** | C | I |
-| **5** | **Phân hệ Quản lý Danh mục & Sản phẩm (`FrmCategory`, `FrmProduct`)** | A | C | **R** |
-| **6** | **Phân hệ Sơ đồ Bàn & Bán hàng POS (`FrmTable`, `FrmPOS`)** | A | **R** | C |
-| **7** | **Phân hệ Quản lý Hóa đơn & In ấn (`FrmInvoice`, `PrintPreview`)** | A | **R** | C |
-| **8** | **Phân hệ Quản lý Nhân viên & Tài khoản (`FrmEmployee`)** | A | C | **R** |
-| **9** | **Phân hệ Báo cáo Doanh thu & Dashboard Chart (`FrmStatistic`, `FrmDashboard`)** | A | C | **R** |
-| **10**| **Xử lý ngoại lệ toàn cục, Tối ưu hóa & Kiểm thử tích hợp** | **A / R** | R | R |
-| **11**| **Đóng gói phần mềm & Hoàn thiện báo cáo đồ án** | **A** | R | R |
+*Phân công trên là phân công chính. Các thành viên vẫn cần phối hợp chặt chẽ khi chức năng của mình sử dụng dữ liệu do thành viên khác quản lý.*
 
 ---
 
-## 2. 📌 MỤC TIÊU DỰ ÁN & PHẠM VI NGHIỆP VỤ
+## 4. Danh mục hàng hóa ban đầu
+Dự án sử dụng **6 danh mục đồ uống chuẩn thực tế** để dữ liệu demo gọn gàng, đẹp mắt và dễ kiểm thử:
 
-### 2.1. Mục tiêu dự án
-Xây dựng một ứng dụng Desktop hoàn chỉnh, chuyên nghiệp phục vụ quản lý quán nước/trà sữa/cafe với các tiêu chí:
-- Thao tác bán hàng tại quầy nhanh nhạy, trực quan, hạn chế tối đa số lần click chuột.
-- Kết nối dữ liệu thời gian thực trực tiếp với Microsoft SQL Server thông qua ADO.NET thuần, không sử dụng dữ liệu giả (fake/mock data).
-- Quản lý chính xác sơ đồ bàn, tình trạng phục vụ và doanh thu từng ca làm việc.
-- Phạm vi ban đầu được thiết kế vừa phải, chặt chẽ để cả nhóm 3 người hoàn thành đúng tiến độ, dễ tích hợp và kiểm thử.
-
-### 2.2. Phạm vi nghiệp vụ hệ thống
-1. **Quản lý hệ thống & Tài khoản**: Đăng nhập, đăng xuất, phân quyền 2 cấp độ (Quản trị viên / Nhân viên thu ngân), đổi mật khẩu.
-2. **Quản lý danh mục & Đồ uống**: CRUD loại đồ uống, CRUD món nước (tên món, giá bán, hình ảnh đại diện, danh mục).
-3. **Quản lý sơ đồ bàn**: Hiển thị trực quan trạng thái bàn (*Trống*, *Có khách*, *Đã đặt*), thêm/sửa/xóa bàn, đổi bàn và gộp bàn.
-4. **Bán hàng POS (Point of Sale)**: Chọn bàn -> Chọn món -> Thêm ghi chú (đường/đá/topping) -> Tăng/giảm số lượng -> Áp dụng chiết khấu -> Tính tiền thừa -> Thanh toán & In phiếu hóa đơn.
-5. **Quản lý hóa đơn**: Tra cứu lịch sử hóa đơn theo ngày/nhân viên, xem lại chi tiết món đã gọi, in lại phiếu tính tiền khi cần.
-6. **Thống kê & Báo cáo**: Tổng quan KPI (Doanh thu hôm nay, Số hóa đơn, Số bàn đang có khách), thống kê doanh thu theo khoảng ngày, danh sách Top 5 đồ uống bán chạy nhất (Best-sellers) và vẽ biểu đồ trực quan.
-
----
-
-## 3. 🛠️ CÔNG NGHỆ SỬ DỤNG
-
-| Thành phần | Công nghệ / Công cụ lựa chọn | Phiên bản khuyến nghị | Ghi chú |
-| :--- | :--- | :--- | :--- |
-| **Ngôn ngữ lập trình** | C# | 10.0 / 12.0 | Ngôn ngữ chính hướng đối tượng |
-| **Nền tảng ứng dụng** | .NET Windows Desktop | .NET 8.0 (LTS) | Hiện đại, hiệu năng cao, hỗ trợ lâu dài |
-| **Giao diện người dùng** | Windows Forms (WinForms) | WinForms .NET 8 | Phong cách Modern Flat UI, Segoe UI |
-| **Hệ quản trị CSDL** | Microsoft SQL Server | 2019 / 2022 / SQL Express | RDBMS chuẩn doanh nghiệp |
-| **Công cụ quản trị CSDL**| SQL Server Management Studio (SSMS) | SSMS 19.x / 20.x | Soạn thảo & thực thi script SQL |
-| **Công nghệ kết nối DB** | ADO.NET thuần (`Microsoft.Data.SqlClient`) | Bản mới nhất | Parameterized Queries chống SQL Injection |
-| **Môi trường phát triển**| Visual Studio Community | 2022 (v17.8 trở lên) | Workload: *.NET desktop development* |
-| **Quản lý mã nguồn** | Git & GitHub | Git 2.x | Quản lý nhánh theo mô hình GitFlow rút gọn |
-
----
-
-## 4. 🍵 DANH MỤC THỰC ĐƠN ĐỒ UỐNG KHỞI TẠO (INITIAL MENU DEMO)
-
-Dự án sử dụng **6 nhóm danh mục chuẩn thực tế** để dữ liệu demo gọn gàng, đẹp mắt và thuận tiện cho việc kiểm thử tích hợp:
-
-| Mã loại | Tên danh mục | Các món nước tiêu biểu (Demo ban đầu) | Đơn giá mẫu |
+| Mã danh mục | Tên danh mục | Sản phẩm demo tiêu biểu | Đơn giá mẫu |
 | :---: | :--- | :--- | :---: |
-| **DM01** | **Cà phê** | Cà phê đen đá, Cà phê sữa đá, Bạc xỉu Sài Gòn, Espresso | 20.000 - 35.000 đ |
-| **DM02** | **Trà sữa** | Trà sữa truyền thống, Trà sữa Thái xanh, Trà sữa Ô long nướng | 30.000 - 45.000 đ |
-| **DM03** | **Trà trái cây** | Trà đào cam sả, Trà vải lài sen, Trà dâu tằm nhiệt đới | 35.000 - 45.000 đ |
-| **DM04** | **Đá xay (Freeze)** | Freeze trà xanh matcha, Cà phê đá xay kem tươi, Choco Freeze | 40.000 - 50.000 đ |
-| **DM05** | **Nước ép & Sinh tố**| Nước ép cam tươi, Nước ép dưa hấu, Sinh tố bơ sáp | 30.000 - 45.000 đ |
-| **DM06** | **Bánh & Topping** | Bánh Tiramisu, Cheesecake chanh leo, Trân châu hoàng kim, Pudding | 10.000 - 35.000 đ |
+| **DM01** | Cà phê | Cà phê đen, Cà phê sữa, Bạc xỉu, Espresso | 20.000 - 35.000 đ |
+| **DM02** | Trà sữa | Trà sữa truyền thống, Trà sữa Thái xanh, Trà sữa Ô long | 30.000 - 45.000 đ |
+| **DM03** | Trà trái cây | Trà đào cam sả, Trà vải lài, Trà dâu tằm | 35.000 - 45.000 đ |
+| **DM04** | Đá xay (Freeze) | Freeze trà xanh matcha, Cà phê đá xay, Choco Freeze | 40.000 - 50.000 đ |
+| **DM05** | Nước ép & Sinh tố | Nước ép cam tươi, Nước dưa hấu, Sinh tố bơ | 30.000 - 45.000 đ |
+| **DM06** | Bánh & Topping | Bánh Tiramisu, Cheesecake, Trân châu đen, Pudding | 10.000 - 35.000 đ |
 
-*Lưu ý: Có thể bổ sung thêm danh mục và đồ uống sau khi nhóm hoàn thành kiểm thử các chức năng CRUD.*
+Có thể bổ sung danh mục sau khi cả nhóm thống nhất. Mỗi sản phẩm thuộc về một danh mục. Một danh mục có thể chứa nhiều sản phẩm.
 
 ---
 
-## 5. 🏗️ CẤU TRÚC SOLUTION & Ý NGHĨA CÁC TẦNG (3-TIER ARCHITECTURE)
+## 5. Cấu trúc Solution và thư mục
 
-### 5.1. Cấu trúc thư mục Solution chuẩn
-
+### Cấu trúc mục tiêu:
 ```
-DrinkShopManagement/
-├── DrinkShopManagement.sln
+DrinkShop/
+├── DrinkShop.sln
 │
-├── DrinkShop.GUI/                     # Presentation Layer (WinForms UI)
+├── DrinkShop.GUI/
 │   ├── Forms/
-│   │   ├── FrmLogin.cs                # Đăng nhập hệ thống
-│   │   ├── FrmMain.cs                 # Form Master (Header, Sidebar, Content Panel)
-│   │   ├── FrmDashboard.cs            # Thẻ KPI tổng quan
-│   │   ├── FrmPOS.cs                  # Màn hình bán hàng gọi món tại bàn
-│   │   ├── FrmTable.cs                # Quản lý sơ đồ bàn
-│   │   ├── FrmProduct.cs              # Quản lý đồ uống & hình ảnh
-│   │   ├── FrmCategory.cs             # Quản lý danh mục
-│   │   ├── FrmInvoice.cs              # Tra cứu & in hóa đơn
-│   │   ├── FrmEmployee.cs             # Quản lý nhân viên & tài khoản
-│   │   └── FrmStatistic.cs            # Báo cáo doanh thu & biểu đồ
+│   │   ├── FrmLogin.cs
+│   │   ├── FrmMain.cs
+│   │   ├── FrmNhanVien.cs
+│   │   ├── FrmDanhMuc.cs
+│   │   ├── FrmSanPham.cs
+│   │   ├── FrmBan.cs
+│   │   ├── FrmBanHang.cs
+│   │   ├── FrmHoaDon.cs
+│   │   └── FrmThongKe.cs
 │   ├── Helpers/
-│   │   ├── FormHelper.cs              # Mở form con nhúng vào Panel nội dung
-│   │   └── UITheme.cs                 # Bảng màu sắc & phong cách giao diện
-│   ├── UserControls/
-│   │   ├── UcProductCard.cs           # Thẻ món nước hiển thị trong POS
-│   │   └── UcTableButton.cs           # Nút bàn đổi màu trạng thái
+│   │   └── FormHelper.cs              # Hỗ trợ nhúng Form vào Panel nội dung
+│   ├── UserControls/                  # Các thẻ hiển thị bàn, món nước
 │   ├── Program.cs
-│   └── App.config                     # Chuỗi kết nối ConnectionString
+│   └── App.config
 │
-├── DrinkShop.BLL/                     # Business Logic Layer (Xử lý nghiệp vụ & Validate)
-│   ├── AuthBLL.cs
-│   ├── UserBLL.cs
-│   ├── CategoryBLL.cs
-│   ├── ProductBLL.cs
-│   ├── TableBLL.cs
-│   ├── OrderBLL.cs
-│   └── StatisticBLL.cs
+├── DrinkShop.BLL/
+│   ├── TaiKhoanBLL.cs
+│   ├── NhanVienBLL.cs
+│   ├── DanhMucBLL.cs
+│   ├── SanPhamBLL.cs
+│   ├── BanBLL.cs
+│   ├── HoaDonBLL.cs
+│   └── ThongKeBLL.cs
 │
-├── DrinkShop.DAL/                     # Data Access Layer (ADO.NET Direct Connection)
-│   ├── DatabaseHelper.cs              # Quản lý kết nối SQL, thực thi Reader/Scalar/Command
-│   ├── UserDAL.cs
-│   ├── CategoryDAL.cs
-│   ├── ProductDAL.cs
-│   ├── TableDAL.cs
-│   ├── OrderDAL.cs
-│   └── StatisticDAL.cs
+├── DrinkShop.DAL/
+│   ├── Database/
+│   │   └── DatabaseHelper.cs          # Quản lý kết nối SQL Server & thực thi câu lệnh
+│   ├── TaiKhoanDAL.cs
+│   ├── NhanVienDAL.cs
+│   ├── DanhMucDAL.cs
+│   ├── SanPhamDAL.cs
+│   ├── BanDAL.cs
+│   ├── HoaDonDAL.cs
+│   └── ThongKeDAL.cs
 │
-├── DrinkShop.DTO/                     # Data Transfer Objects (Entity Models)
-│   ├── RoleDTO.cs
-│   ├── UserDTO.cs
-│   ├── CategoryDTO.cs
-│   ├── ProductDTO.cs
-│   ├── TableDTO.cs
-│   ├── OrderDTO.cs
-│   ├── OrderDetailDTO.cs
-│   └── StatisticDTO.cs
+├── DrinkShop.DTO/
+│   ├── TaiKhoanDTO.cs
+│   ├── NhanVienDTO.cs
+│   ├── DanhMucDTO.cs
+│   ├── SanPhamDTO.cs
+│   ├── BanDTO.cs
+│   ├── HoaDonDTO.cs
+│   ├── ChiTietHoaDonDTO.cs
+│   └── ThongKeDTO.cs
 │
-├── Database/                          # Kịch bản cơ sở dữ liệu dùng chung
-│   ├── DrinkShopDB.sql                # Tạo Database, bảng, khóa chính, khóa ngoại, index
-│   └── SampleData.sql                 # Dữ liệu ban đầu (Tài khoản mẫu, Menu, Bàn mẫu)
+├── Database/
+│   ├── DrinkShopDB.sql                # Script tạo Database, bảng, khóa chính, khóa ngoại
+│   └── SampleData.sql                 # Dữ liệu khởi tạo mẫu
 │
-├── Documents/                         # Tài liệu đồ án
-│   ├── ERD.png                        # Sơ đồ thực thể liên kết
-│   ├── DeCuongBaoCao.docx             # Báo cáo đồ án chi tiết
-│   └── PhanCongCongViec.docx          # Bảng phân công chi tiết
+├── Documents/
+│   ├── ERD.png
+│   ├── DeCuongBaoCao.docx
+│   └── PhanCongCongViec.docx
 │
 └── README.md
 ```
 
-### 5.2. Ý nghĩa các tầng & Quan hệ tham chiếu (Project References)
-- **GUI (Presentation Layer)**: Chịu trách nhiệm hiển thị giao diện, bắt sự kiện click/input của người dùng, gọi tầng BLL để lấy/xử lý dữ liệu và hiển thị lên controls.
-- **BLL (Business Logic Layer)**: Kiểm tra tính hợp lệ của dữ liệu (Validate), áp dụng các quy tắc kinh doanh (tính tiền thừa, giảm giá, kiểm tra trùng lặp), làm cầu nối giữa GUI và DAL.
-- **DAL (Data Access Layer)**: Thực hiện trực tiếp các câu truy vấn SQL (SELECT, INSERT, UPDATE, DELETE) thông qua ADO.NET (`SqlCommand`, `SqlDataReader`, `SqlTransaction`).
-- **DTO (Data Transfer Object)**: Định nghĩa các lớp thực thể (Entity classes) chứa dữ liệu trao đổi qua lại giữa các tầng mà không chứa logic nghiệp vụ.
+*Đây là cấu trúc định hướng; không cần tạo tất cả file rỗng ngay lập tức. Khi tạo project, kiểm tra đúng loại project Windows Forms App và phiên bản .NET mà nhóm đã chốt.*
 
-```mermaid
-graph TD
-    GUI["DrinkShop.GUI (Presentation)"] --> BLL["DrinkShop.BLL (Business Logic)"]
-    GUI --> DTO["DrinkShop.DTO (Data Entities)"]
-    BLL --> DAL["DrinkShop.DAL (Data Access)"]
-    BLL --> DTO
-    DAL --> DTO
-    DAL --> SQL[("Microsoft SQL Server")]
+### Ý nghĩa các tầng:
+- **GUI (Presentation)**: Hiển thị Form, nhận thao tác tương tác của người dùng và gọi xuống BLL.
+- **BLL (Business Logic)**: Kiểm tra tính hợp lệ của dữ liệu (validate) và xử lý quy tắc nghiệp vụ kinh doanh.
+- **DAL (Data Access)**: Thực hiện các câu truy vấn cơ sở dữ liệu SQL Server thông qua ADO.NET.
+- **DTO (Data Transfer Object)**: Các lớp đối tượng dùng để chứa và truyền tải dữ liệu giữa các tầng.
+
+### Quan hệ tham chiếu project đề xuất:
+```
+DrinkShop.GUI  -> DrinkShop.BLL
+DrinkShop.GUI  -> DrinkShop.DTO
+
+DrinkShop.BLL  -> DrinkShop.DAL
+DrinkShop.BLL  -> DrinkShop.DTO
+
+DrinkShop.DAL  -> DrinkShop.DTO
 ```
 
-> ⛔ **QUY TẮC CẤM:**
-> 1. Tầng **GUI tuyệt đối không được truy vấn SQL trực tiếp** hoặc gọi thẳng vào tầng DAL. Mọi thao tác bắt buộc phải thông qua BLL.
-> 2. **Không commit chuỗi kết nối chứa mật khẩu thật** lên GitHub repository.
+> ⛔ **Quy tắc quan trọng:**
+> - Không để GUI truy vấn SQL trực tiếp hoặc tham chiếu trực tiếp đến DAL.
+> - Không đặt mật khẩu database trong mã nguồn được đẩy lên GitHub.
 
 ---
 
-## 6. 🗄️ CƠ SỞ DỮ LIỆU DÙNG CHUNG & THIẾT KẾ SCHEMA (ERD)
+## 6. Cơ sở dữ liệu dùng chung
+Cả nhóm sử dụng một database SQL Server có tên **`DrinkShopDB`** với cùng một schema đã được thống nhất. Không tự tạo schema khác nhau cho từng thành viên.
 
-Cả nhóm sử dụng một Database thống nhất trên Microsoft SQL Server có tên là **`DrinkShopDB`**.
+### Các bảng dự kiến:
+1. `Quyen` (MaQuyen, TenQuyen)
+2. `TaiKhoan` (MaTaiKhoan, TenDangNhap, MatKhau, MaQuyen, TrangThai)
+3. `NhanVien` (MaNV, HoTen, SoDienThoai, Email, MaTaiKhoan)
+4. `DanhMuc` (MaDanhMuc, TenDanhMuc, TrangThai)
+5. `SanPham` (MaSanPham, TenSanPham, MaDanhMuc, DonGia, HinhAnh, TrangThai)
+6. `Ban` (MaBan, TenBan, TrangThai: *Trống / Có khách / Đã đặt*)
+7. `HoaDon` (MaHoaDon, MaBan, MaNV, NgayTao, TongTien, GiamGia, TienKhachDua, TienThoi, TrangThai)
+8. `ChiTietHoaDon` (MaCTHD, MaHoaDon, MaSanPham, SoLuong, DonGia, ThanhTien, GhiChu)
 
-### 6.1. Sơ đồ quan hệ thực thể (ERD)
+### Quan hệ nghiệp vụ chính:
+- `SanPham` tham chiếu `DanhMuc`.
+- `HoaDon` tham chiếu `Ban` và `NhanVien` lập hóa đơn.
+- `ChiTietHoaDon` tham chiếu `HoaDon` và `SanPham`.
+- `TaiKhoan` tham chiếu `Quyen` và liên kết 1-1 với `NhanVien`.
 
-```mermaid
-erDiagram
-    ROLES ||--o{ USERS : "has"
-    USERS ||--o{ ORDERS : "creates"
-    TABLES ||--o{ ORDERS : "assigned_to"
-    CATEGORIES ||--o{ PRODUCTS : "contains"
-    ORDERS ||--o{ ORDER_DETAILS : "includes"
-    PRODUCTS ||--o{ ORDER_DETAILS : "ordered_in"
+> **Quy tắc quan trọng:** Thành viên 1 (**Nguyễn Thành Đạt**) được phân công quản lý file schema chính `Database/DrinkShopDB.sql`. Khi cần sửa bảng hoặc cột, phải trao đổi với cả nhóm, cập nhật file SQL và thông báo trước khi các thành viên cập nhật code.
 
-    ROLES {
-        int RoleId PK
-        nvarchar RoleName
-        nvarchar Description
-    }
-
-    USERS {
-        int UserId PK
-        nvarchar Username UK
-        nvarchar PasswordHash
-        nvarchar FullName
-        nvarchar Phone
-        nvarchar Email
-        int RoleId FK
-        bit IsActive
-        datetime CreatedAt
-    }
-
-    CATEGORIES {
-        int CategoryId PK
-        nvarchar CategoryName
-        bit IsActive
-    }
-
-    PRODUCTS {
-        int ProductId PK
-        nvarchar ProductName
-        int CategoryId FK
-        decimal Price
-        nvarchar ImageUrl
-        bit IsActive
-    }
-
-    TABLES {
-        int TableId PK
-        nvarchar TableName
-        nvarchar Status "Trống | Có khách | Đã đặt"
-        bit IsActive
-    }
-
-    ORDERS {
-        int OrderId PK
-        int TableId FK
-        int UserId FK
-        datetime OrderDate
-        decimal SubTotal
-        decimal DiscountPercent
-        decimal TotalAmount
-        decimal CustomerPay
-        decimal ReturnPay
-        nvarchar PaymentMethod "Tiền mặt | Chuyển khoản"
-        nvarchar Status "Chưa thanh toán | Đã thanh toán | Đã hủy"
-    }
-
-    ORDER_DETAILS {
-        int OrderDetailId PK
-        int OrderId FK
-        int ProductId FK
-        int Quantity
-        decimal UnitPrice
-        decimal LineTotal
-        nvarchar Note
-    }
-```
-
-### 6.2. Kịch bản tạo Database trong SQL Server
-Mở **SQL Server Management Studio (SSMS)** và chạy đoạn mã:
+### Tạo database trong SSMS:
+Mở SQL Server Management Studio (SSMS) và chạy:
 ```sql
 CREATE DATABASE DrinkShopDB
 COLLATE Vietnamese_CI_AS;
@@ -317,200 +200,138 @@ GO
 USE DrinkShopDB;
 GO
 ```
-Sau đó mở và chạy file `Database/DrinkShopDB.sql`, kế tiếp chạy file `Database/SampleData.sql` để có ngay bộ dữ liệu mẫu khởi đầu.
+Sau khi hoàn thiện schema, chạy `Database/DrinkShopDB.sql`, sau đó chạy `Database/SampleData.sql` để tạo dữ liệu mẫu ban đầu.
 
-### 6.3. Cấu hình Connection String trong `App.config`
+*Không tự ý chạy script xóa/drop bảng trên database dùng chung. Khi thử nghiệm thao tác xóa hoặc bán hàng, nên dùng dữ liệu test đã thống nhất.*
+
+### Kết nối SQL Server
+Ví dụ Connection String minh họa trong `App.config`:
 ```xml
 <connectionStrings>
-    <!-- Trường hợp chạy SQL Server cục bộ (Default Instance) -->
+    <!-- Nếu SQL Server chạy cục bộ trên máy thành viên (Windows Authentication) -->
     <add name="DrinkShopConn" 
          connectionString="Server=localhost;Database=DrinkShopDB;Trusted_Connection=True;TrustServerCertificate=True;" 
-         providerName="System.Data.SqlClient" />
+         providerName="Microsoft.Data.SqlClient" />
 
-    <!-- Trường hợp chạy SQL Express -->
+    <!-- Nếu dùng SQL Server Express -->
     <!-- <add name="DrinkShopConn" 
          connectionString="Server=.\SQLEXPRESS;Database=DrinkShopDB;Trusted_Connection=True;TrustServerCertificate=True;" 
-         providerName="System.Data.SqlClient" /> -->
+         providerName="Microsoft.Data.SqlClient" /> -->
+
+    <!-- Nếu dùng tài khoản SQL Server Authentication (app_user) -->
+    <!-- <add name="DrinkShopConn" 
+         connectionString="Server=localhost;Database=DrinkShopDB;User Id=app_user;Password=YOUR_PASSWORD;TrustServerCertificate=True;" 
+         providerName="Microsoft.Data.SqlClient" /> -->
 </connectionStrings>
 ```
+- Nếu dùng máy chủ trong mạng LAN: thay `localhost` bằng IP máy chủ.
+- Không commit mật khẩu thật vào Git.
 
 ---
 
-## 7. 🔄 QUY TRÌNH NGHIỆP VỤ CỐT LÕI (POS & TABLE ORDER FLOW)
+## 7. Quy trình nghiệp vụ cần thống nhất
 
-### 7.1. Quy trình Gọi món tại bàn (Order Flow)
-```mermaid
-sequenceDiagram
-    autonumber
-    actor ThuNgan as Nhân viên thu ngân
-    participant POS as FrmPOS (UI)
-    participant BLL as OrderBLL / TableBLL
-    participant DAL as OrderDAL / TableDAL
-    participant DB as SQL Server
+### Gọi món & Lập Order tại bàn
+1. Chọn bàn cần phục vụ trên sơ đồ bàn (ví dụ: Bàn 03).
+2. Kiểm tra trạng thái bàn:
+   - Nếu bàn đang có khách: Tải lại danh sách món đã gọi trước đó.
+   - Nếu bàn trống: Khởi tạo đơn mới cho bàn.
+3. Chọn danh mục đồ uống và click chọn món.
+4. Chọn số lượng và thêm ghi chú định lượng (ví dụ: "70% đường, 50% đá, thêm trân châu").
+5. Nhấn **Lưu Order**: Hệ thống lưu thông tin vào `HoaDon` và `ChiTietHoaDon`, đồng thời cập nhật trạng thái bàn sang `'Có khách'`.
 
-    ThuNgan->>POS: Chọn bàn trên sơ đồ (VD: Bàn 03)
-    POS->>BLL: Lấy thông tin hóa đơn chưa thanh toán của Bàn 03
-    BLL->>DAL: Query order hiện tại
-    DAL->>DB: SELECT * FROM Orders WHERE TableId = 3 AND Status = 'Chưa thanh toán'
-    DB-->>POS: Trả về danh sách món hiện có (nếu có)
-    ThuNgan->>POS: Bấm chọn món nước + Ghi chú (Ít đường, nhiều đá)
-    ThuNgan->>POS: Bấm nút "Lưu Order"
-    POS->>BLL: Lưu hóa đơn & chi tiết hóa đơn
-    BLL->>DAL: Insert/Update Orders & OrderDetails (Transaction)
-    DAL->>DB: Cập nhật CSDL
-    BLL->>DAL: Đổi trạng thái Bàn 03 thành 'Có khách'
-    DAL->>DB: UPDATE Tables SET Status = N'Có khách' WHERE TableId = 3
-    DB-->>POS: Thành công, đổi màu nút Bàn 03 sang màu Đỏ/Cam
-```
+### Chuyển bàn và Gộp bàn
+- **Chuyển bàn**: Chọn bàn cần chuyển (Bàn A) -> chọn Bàn B (phải đang trống) -> Cập nhật `MaBan = B` trong `HoaDon`, đổi trạng thái Bàn A thành `'Trống'` và Bàn B thành `'Có khách'`.
+- **Gộp bàn**: Chuyển các món từ hóa đơn Bàn A sang hóa đơn Bàn B, đóng/hủy hóa đơn cũ của Bàn A và giải phóng Bàn A về trạng thái `'Trống'`.
 
-### 7.2. Quy trình Chuyển bàn / Gộp bàn
-1. Chọn bàn cần chuyển (Bàn A - đang có khách).
-2. Bấm nút **Chuyển bàn**, chọn bàn đích (Bàn B - đang trống).
-3. Hệ thống kiểm tra: Nếu Bàn B trống, cập nhật `TableId = B` trong `Orders`, chuyển trạng thái Bàn A thành *Trống*, chuyển Bàn B thành *Có khách*.
-4. Nếu gộp bàn: Chuyển toàn bộ `OrderDetails` của Bàn A sang hóa đơn của Bàn B, hủy/đóng hóa đơn cũ của Bàn A và trả Bàn A về trạng thái *Trống*.
-
-### 7.3. Quy trình Thanh toán & In hóa đơn
-1. Thu ngân bấm chọn bàn cần thanh toán.
-2. Kiểm tra tổng tiền món (`SubTotal`), nhập tỉ lệ giảm giá nếu có (`DiscountPercent`).
-3. Hệ thống tự động tính tổng tiền thanh toán (`TotalAmount`).
-4. Nhập tiền khách đưa (`CustomerPay`), hệ thống tự động tính tiền trả lại (`ReturnPay`).
-5. Bấm **Thanh toán**:
-   - Sử dụng `SqlTransaction` để:
-     - Cập nhật hóa đơn sang trạng thái `'Đã thanh toán'`, lưu thông tin tiền khách trả và phương thức thanh toán.
-     - Cập nhật trạng thái bàn tương ứng về `'Trống'`.
-   - Nếu có bất kỳ lỗi nào xảy ra trong quá trình thực thi, hệ thống lập tức `Rollback` để bảo toàn tính nhất quán của dữ liệu.
-6. Hiển thị cửa sổ xem trước (Print Preview) và in phiếu hóa đơn thanh toán cho khách hàng.
+### Thanh toán & Trả bàn
+1. Chọn bàn cần thanh toán, kiểm tra lại danh sách món và tổng tiền món.
+2. Nhập phần trăm giảm giá / chiết khấu (nếu có).
+3. Hệ thống tự động tính tổng tiền thanh toán.
+4. Nhập số tiền khách đưa -> Hệ thống tự động tính số tiền thừa trả khách.
+5. Nhấn **Xác nhận thanh toán**:
+   - Dùng **`SqlTransaction`** để cập nhật trạng thái hóa đơn sang `'Đã thanh toán'`, cập nhật phương thức thanh toán, và đổi trạng thái bàn tương ứng về `'Trống'` như một giao dịch thống nhất. Nếu phát sinh lỗi thì lập tức `Rollback`.
+6. Hiển thị xem trước (Print Preview) và in phiếu hóa đơn thanh toán cho khách hàng.
 
 ---
 
-## 8. 📅 KẾ HOẠCH TRIỂN KHAI THEO GIAI ĐOẠN (ROADMAP)
+## 8. Quy ước Git và GitHub
 
-### 📍 Giai đoạn 1: Khởi tạo Cơ sở dữ liệu & Cấu trúc Solution
-- [ ] **1.1.** Cài đặt Database `DrinkShopDB` trên SQL Server với kịch bản script đầy đủ bảng, khóa chính, khóa ngoại, chỉ mục (Index) và dữ liệu mẫu khởi đầu (Tài khoản Admin, Danh mục đồ uống, Bàn mẫu).
-- [ ] **1.2.** Khởi tạo Visual Studio Solution theo mô hình 3 lớp (`DrinkShop.DTO`, `DrinkShop.DAL`, `DrinkShop.BLL`, `DrinkShop.GUI`).
-- [ ] **1.3.** Cấu hình `App.config` chứa chuỗi kết nối an toàn.
-- [ ] **1.4.** Xây dựng lớp `DatabaseHelper.cs` (ADO.NET chuẩn, mở/đóng kết nối tự động, transaction, chống SQL Injection).
-- [ ] **Kiểm thử Giai đoạn 1:** Chạy đoạn mã kiểm tra ping kết nối SQL Server thành công và đọc dữ liệu kiểm chứng.
-
-### 📍 Giai đoạn 2: Thiết kế Khung giao diện hiện đại & Đăng nhập
-- [ ] **2.1.** Xây dựng phong cách UI chuẩn (Bảng màu hiện đại, Segoe UI, thiết kế bo góc, hiệu ứng hover nút bấm).
-- [ ] **2.2.** Thiết kế Form Đăng nhập (`FrmLogin`):
-  - Nhập tài khoản, mật khẩu (ẩn/hiện mật khẩu).
-  - Kết nối xác thực từ CSDL qua `AuthBLL` -> `UserDAL`.
-  - Phân quyền theo vai trò (Quản trị viên / Nhân viên thu ngân) và lưu phiên đăng nhập (`UserSession`).
-- [ ] **2.3.** Thiết kế Giao diện Khung chính (`FrmMain`):
-  - Sidebar điều hướng (Dashboard, Bán hàng, Sản phẩm, Danh mục, Bàn, Hóa đơn, Nhân viên, Thống kê).
-  - Header hiển thị ngày giờ, tên nhân viên đăng nhập, nút đăng xuất, thu nhỏ/tắt ứng dụng.
-  - Vùng hiển thị động (`Content Panel`) để nhúng các Form con mượt mà, không bị giật lag.
-- [ ] **Kiểm thử Giai đoạn 2:** Đăng nhập với tài khoản Admin và Nhân viên, kiểm tra hiển thị đúng thông tin và điều hướng sidebar trơn tru.
-
-### 📍 Giai đoạn 3: Phân hệ Quản lý Danh mục & Sản phẩm (CRUD)
-- [ ] **3.1.** Xây dựng Form Quản lý Danh mục (`FrmCategory`):
-  - Xem danh sách DataGridView, Thêm, Sửa, Xóa (cập nhật trạng thái `IsActive = 0`), Tìm kiếm realtime.
-- [ ] **3.2.** Xây dựng Form Quản lý Sản phẩm (`FrmProduct`):
-  - Hiển thị danh sách đồ uống kèm giá tiền (format tiền tệ VNĐ `#,##0 đ`), danh mục liên kết.
-  - Chức năng chọn ảnh minh họa đồ uống (lưu trữ đường dẫn hoặc thư mục `Resources/Images`).
-  - Lọc theo danh mục, tìm kiếm theo tên món.
-- [ ] **Kiểm thử Giai đoạn 3:** Thêm mới 1 danh mục (ví dụ: "Trà sữa", "Cà phê"), thêm 3 món nước mới, sửa giá và kiểm tra cập nhật chuẩn trong SQL Server.
-
-### 📍 Giai đoạn 4: Phân hệ Bán hàng POS & Quản lý Bàn nước (Trọng tâm)
-- [ ] **4.1.** Thiết kế Form Quản lý Bàn (`FrmTable`): Thêm bàn, đổi trạng thái bàn, khu vực.
-- [ ] **4.2.** Thiết kế Giao diện POS Bán hàng (`FrmPOS`):
-  - Cột 1: Sơ đồ bàn trực quan hiển thị theo màu sắc (Xanh: Trống, Đỏ/Cam: Đang có khách, Vàng: Đã đặt trước).
-  - Cột 2: Danh sách món nước hiển thị dạng Grid Card (có hình ảnh, tên món, giá tiền), bấm vào thẻ để thêm vào hóa đơn.
-  - Cột 3: Hóa đơn bàn đang chọn: Tăng/giảm số lượng, xóa món, nhập ghi chú (ví dụ: "Ít đường, nhiều đá").
-- [ ] **4.3.** Nghiệp vụ tính tiền: Tự động cộng tổng tiền, áp dụng chiết khấu %, tính tiền thừa khi khách trả.
-- [ ] **4.4.** Nghiệp vụ Bàn: Chuyển bàn, gộp bàn khi khách đổi chỗ.
-- [ ] **4.5.** Chức năng Thanh toán & In hóa đơn: Cập nhật trạng thái đơn, giải phóng bàn về "Trống", xuất preview phiếu tính tiền.
-- [ ] **Kiểm thử Giai đoạn 4:** Chọn bàn -> Gọi 2 món -> Tăng giảm số lượng -> Nhập tiền khách trả -> Bấm Thanh toán -> Kiểm tra trạng thái bàn và dữ liệu đơn hàng trong bảng `Orders` & `OrderDetails`.
-
-### 📍 Giai đoạn 5: Phân hệ Quản lý Hóa đơn & Nhân viên
-- [ ] **5.1.** Quản lý Lịch sử Hóa đơn (`FrmInvoice`):
-  - Tìm kiếm hóa đơn theo khoảng ngày, theo nhân viên tạo, theo trạng thái.
-  - Xem chi tiết từng món trong hóa đơn cũ.
-  - In lại phiếu tính tiền khi cần.
-- [ ] **5.2.** Quản lý Tài khoản Nhân viên (`FrmEmployee`):
-  - CRUD nhân viên: Họ tên, SĐT, Email, Tên tài khoản, Mật khẩu, Vai trò (Admin / Thu ngân).
-  - Khóa/Mở khóa tài khoản nhân viên.
-  - Phân quyền nghiệp vụ (Nhân viên không được xóa hóa đơn hay xem quản lý nhân viên).
-- [ ] **Kiểm thử Giai đoạn 5:** Tạo 1 tài khoản nhân viên mới, đăng nhập tài khoản đó kiểm tra quyền hạn có bị giới hạn đúng chuẩn hay không.
-
-### 📍 Giai đoạn 6: Phân hệ Báo cáo Doanh thu & Thống kê
-- [ ] **6.1.** Màn hình Dashboard Tổng quan (`FrmDashboard`):
-  - Các thẻ KPI: Doanh thu hôm nay, Số đơn hôm nay, Số món đã bán, Bàn đang phục vụ.
-- [ ] **6.2.** Màn hình Thống kê Báo cáo (`FrmStatistic`):
-  - Báo cáo doanh thu theo ngày / tuần / tháng / năm hoặc khoảng ngày tùy chọn.
-  - Danh sách Top 5 đồ uống bán chạy nhất (Best-sellers).
-  - Biểu đồ trực quan doanh thu (Chart control).
-  - Xuất dữ liệu báo cáo ra file Excel.
-- [ ] **Kiểm thử Giai đoạn 6:** Thử nghiệm tạo nhiều đơn hàng và đối soát số liệu biểu đồ hiển thị với câu lệnh `SUM()` trong SQL Server.
-
-### 📍 Giai đoạn 7: Tối ưu hóa, Xử lý lỗi toàn cục & Đóng gói hoàn thiện
-- [ ] **7.1.** Bắt lỗi tập trung (Global Exception Handling) tránh crash ứng dụng.
-- [ ] **7.2.** Tối ưu trải nghiệm: Thêm phím tắt (F1, F2,... Enter để tìm kiếm), kiểm tra ràng buộc nhập liệu (Validation messages thân thiện bằng tiếng Việt).
-- [ ] **7.3.** Đóng gói chương trình và chuẩn bị tài liệu báo cáo đồ án.
-
----
-
-## 9. 🐙 QUY ƯỚC GIT & GITHUB WORKFLOW CHO NHÓM
-
-### 9.1. Mô hình phân nhánh (Git Branching Model)
+### Nhánh Git
 ```
-main (Phiên bản ổn định, sẵn sàng nộp/demo)
-  └── develop (Nhánh tích hợp chung của cả nhóm)
-        ├── feature/system-core      (Nguyễn Thành Đạt phụ trách)
-        ├── feature/pos-table-order  (Nguyễn Trọng Hiếu phụ trách)
-        └── feature/product-report   (Lê Tuấn Anh phụ trách)
+main
+└── develop
+    ├── feature/system-management     # Thành viên 1: Đăng nhập, Main, Nhân viên, Core
+    ├── feature/pos-sales-billing     # Thành viên 2: Bàn, Bán hàng POS, Hóa đơn
+    └── feature/product-menu-report   # Thành viên 3: Danh mục, Sản phẩm, Thống kê
 ```
+- `main`: Phiên bản ổn định nhất, dùng để bàn giao và demo với giảng viên.
+- `develop`: Nhánh tích hợp các chức năng của cả nhóm.
+- `feature/...`: Nhánh làm việc riêng theo phân công của từng thành viên.
 
-### 9.2. Hướng dẫn thao tác Git cơ bản cho thành viên
-
-**1. Lấy mã nguồn lần đầu:**
+### Lần đầu lấy project về máy
 ```bash
-git clone <URL_REPO_GITHUB>
+git clone <GITHUB_REPOSITORY_URL>
 cd drink-shop-management
 ```
 
-**2. Tạo và chuyển sang nhánh tính năng cá nhân:**
+### Tạo nhánh cá nhân (Ví dụ Thành viên 2)
 ```bash
 git checkout develop
 git pull origin develop
-git checkout -b feature/<ten-tinh-nang>
+git checkout -b feature/pos-sales-billing
 ```
 
-**3. Lưu và đẩy code thường xuyên:**
+### Lưu và đẩy code lên GitHub
 ```bash
 git status
 git add .
-git commit -m "feat(product): Xay dung giao dien FrmProduct va CRUD BLL"
-git push -u origin feature/<ten-tinh-nang>
+git commit -m "feat(pos): Hoan thien giao dien dat mon tai ban FrmBanHang"
+git push -u origin feature/pos-sales-billing
+```
+Những lần tiếp theo:
+```bash
+git add .
+git commit -m "fix(pos): Tinh toan chinh xac tien thoi va chiet khau"
+git push
 ```
 
-**4. Cập nhật code mới nhất từ nhánh `develop` về nhánh cá nhân:**
-Trước khi bắt đầu code ca làm việc mới:
+### Cập nhật code mới từ nhóm
+Trước khi bắt đầu phiên làm việc:
 ```bash
 git checkout develop
 git pull origin develop
-git checkout feature/<ten-tinh-nang>
+git checkout feature/pos-sales-billing
 git merge develop
 ```
-*Nếu có xung đột (conflict), thành viên phải mở Visual Studio để xem từng file bị conflict, giải quyết cẩn thận, build thử thành công rồi mới commit merge.*
+*Nếu phát sinh conflict, cần đọc và giải quyết từng file, kiểm tra build lại trong Visual Studio rồi mới commit.*
 
-### 9.3. Quy tắc làm việc nhóm trên Git
-- ❌ **Tuyệt đối không push code trực tiếp lên nhánh `main`**.
-- ❌ **Không commit các thư mục rác / build**: `bin/`, `obj/`, `.vs/`, `.user`, file CSDL cục bộ `*.mdf`, `*.ldf`.
-- ❌ **Không commit mật khẩu thật hay connection string nhạy cảm**.
-- ✅ Mỗi thành viên phải tự build sạch sẽ trên máy cá nhân trước khi tạo Pull Request (PR) vào nhánh `develop`.
+### Quy tắc làm việc nhóm trên Git:
+- Không bao giờ push code trực tiếp lên `main`.
+- Không tự ý merge khi chưa review mã nguồn.
+- Không cùng sửa một Form hoặc một file cấu hình nếu chưa trao đổi trước.
+- Commit theo từng chức năng nhỏ, thông điệp commit rõ ràng (theo chuẩn `feat:`, `fix:`, `refactor:`).
+- Tuyệt đối không commit thư mục build: `bin/`, `obj/`, thư mục `.vs/`, file `*.user`.
+- Không commit mật khẩu, chuỗi kết nối chứa thông tin bảo mật.
+- Mỗi thành viên phải pull code mới nhất từ `develop` trước khi bắt đầu phiên làm việc.
 
 ---
 
-## 10. 🖼️ QUY TRÌNH TÍCH HỢP FORM LÊN MASTER UI
+## 9. Quy trình tích hợp Form
 
-Để toàn bộ ứng dụng có giao diện hiện đại, chuyên nghiệp, đồng nhất và không bị tình trạng mỗi chức năng bật một cửa sổ popup rời rạc, dự án sử dụng kỹ thuật **nhúng Form con vào Panel nội dung (`pnlContent`) của `FrmMain`**.
+1. Thành viên hoàn thiện Form và các lớp BLL/DAL/DTO tương ứng.
+2. Tự build và kiểm thử chức năng hoàn chỉnh trên máy cá nhân.
+3. Commit và push code lên feature branch cá nhân.
+4. Tạo Pull Request (PR) từ nhánh cá nhân vào nhánh `develop`.
+5. Người phụ trách tích hợp (Thành viên 1) review thay đổi.
+6. Merge PR khi code đã build thành công và không làm hỏng các chức năng hiện có.
+7. Cả nhóm pull nhánh `develop` mới về máy và kiểm thử tích hợp.
 
-### Kỹ thuật nhúng Form con chuẩn WinForms:
-Trong file `DrinkShop.GUI/Helpers/FormHelper.cs`:
+### Cơ chế mở Form con đồng nhất trên `FrmMain`:
+`FrmMain` là Form điều hướng chính. Các Form chức năng được mở từ các nút menu trên Sidebar của `FrmMain` và nhúng trực tiếp vào Panel nội dung (`pnlContent`) bằng helper dùng chung:
+
 ```csharp
+// File DrinkShop.GUI/Helpers/FormHelper.cs
 public static class FormHelper
 {
     private static Form currentChildForm = null;
@@ -527,7 +348,7 @@ public static class FormHelper
         childForm.TopLevel = false;
         childForm.FormBorderStyle = FormBorderStyle.None;
         childForm.Dock = DockStyle.Fill;
-        
+
         targetPanel.Controls.Clear();
         targetPanel.Controls.Add(childForm);
         targetPanel.Tag = childForm;
@@ -537,117 +358,84 @@ public static class FormHelper
 }
 ```
 
-Khi bấm vào nút Sidebar trên `FrmMain`:
-```csharp
-private void btnPOS_Click(object sender, EventArgs e)
-{
-    FormHelper.OpenChildForm(new FrmPOS(), pnlContent);
-    lblHeaderTitle.Text = "BÁN HÀNG TẠI BÀN (POS)";
-}
-```
+---
+
+## 10. Quy ước code
+
+- Dùng **PascalCase** cho class, method, property: `SanPhamBLL`, `GetAllProducts()`, `DonGia`.
+- Tên Form bắt đầu bằng **`Frm`**: `FrmLogin`, `FrmSanPham`, `FrmBanHang`.
+- Tên lớp tầng nghiệp vụ kết thúc bằng **`BLL`**: `SanPhamBLL`.
+- Tên lớp truy cập dữ liệu kết thúc bằng **`DAL`**: `SanPhamDAL`.
+- Tên lớp dữ liệu kết thúc bằng **`DTO`**: `SanPhamDTO`.
+- Tên bảng và tên cột phải tuân thủ chính xác theo schema database đã thống nhất trong `DrinkShopDB.sql`.
+- **Dùng Parameterized Queries 100%**: Tuyệt đối không nối chuỗi trực tiếp từ ô nhập liệu để tạo câu SQL.
+- Kiểm tra dữ liệu đầu vào (Validation) chặt chẽ và hiển thị thông báo lỗi thân thiện, dễ hiểu bằng tiếng Việt.
+- Đóng/dispose connection, command và reader đúng cách; ưu tiên dùng cấu trúc **`using (...)`**.
+- Không để một Form GUI chứa toàn bộ câu lệnh SQL và logic nghiệp vụ.
 
 ---
 
-## 11. 🎨 QUY CHUẨN ĐẶT TÊN CONTROL & CODE CONVENTIONS
+## 11. Checklist trước khi hoàn thành
 
-### 11.1. Bảng quy chuẩn đặt tên Control bằng tiếng Anh
-Để cả 3 thành viên phối hợp code đồng bộ, chuyên nghiệp và chuẩn quốc tế, toàn bộ tên Control tuân thủ nghiêm ngặt tiền tố (Prefix) viết tắt và định danh hoàn toàn bằng **tiếng Anh**:
+### ⚙️ Môi trường
+- [ ] Cả 3 máy thành viên đã cài đặt Visual Studio 2022 và workload *.NET Desktop Development*.
+- [ ] Cả nhóm thống nhất phiên bản `.NET 8.0 Windows Desktop`.
+- [ ] SQL Server và SSMS hoạt động ổn định.
+- [ ] Clone được repository về máy và mở được `DrinkShop.sln`.
+- [ ] Restore NuGet packages thành công.
 
-| Loại Control | Tiền tố (Prefix) | Ví dụ tên Control (Naming Convention) | Ý nghĩa / Mục đích sử dụng |
-| :--- | :---: | :--- | :--- |
-| **Form** | `Frm` | `FrmLogin`, `FrmMain`, `FrmPOS`, `FrmProduct`, `FrmCategory`, `FrmTable`, `FrmInvoice`, `FrmEmployee`, `FrmStatistic` | Cửa sổ giao diện chức năng |
-| **Button** | `btn` | `btnAdd`, `btnEdit`, `btnDelete`, `btnSave`, `btnCancel`, `btnCheckout`, `btnPrint`, `btnSearch`, `btnRefresh` | Nút bấm thao tác |
-| **TextBox** | `txt` | `txtUsername`, `txtPassword`, `txtProductName`, `txtUnitPrice`, `txtSearch`, `txtCustomerPay`, `txtPhone`, `txtEmail` | Hộp nhập dữ liệu dạng chuỗi văn bản |
-| **ComboBox** | `cbo` | `cboCategory`, `cboTable`, `cboRole`, `cboPaymentMethod`, `cboStatusFilter` | Hộp danh sách thả xuống chọn 1 giá trị |
-| **DataGridView** | `dgv` | `dgvProducts`, `dgvCategories`, `dgvTables`, `dgvInvoices`, `dgvOrderDetails`, `dgvEmployees` | Lưới bảng hiển thị danh sách dữ liệu từ CSDL |
-| **Label** | `lbl` | `lblTitle`, `lblTotalAmount`, `lblSubTotal`, `lblDiscount`, `lblReturnPay`, `lblEmployeeName`, `lblCurrentDate` | Nhãn hiển thị thông tin tĩnh hoặc động |
-| **PictureBox** | `pic` | `picProductImage`, `picLogo`, `picAvatar`, `picPreview` | Khung hiển thị hình ảnh |
-| **Panel** | `pnl` | `pnlSidebar`, `pnlHeader`, `pnlContent`, `pnlBillSummary`, `pnlActions` | Khung vùng chứa phân chia bố cục giao diện |
-| **FlowLayoutPanel**| `flp` | `flpTableList`, `flpProductList`, `flpCategoryFilter` | Khung vùng chứa sắp xếp thẻ/nút động tự co giãn |
-| **DateTimePicker** | `dtp` | `dtpFromDate`, `dtpToDate`, `dtpOrderDate`, `dtpBirthDate` | Bộ chọn ngày giờ |
-| **NumericUpDown** | `nud` | `nudQuantity`, `nudDiscountPercent` | Hộp chọn số lượng, tỉ lệ % tăng/giảm |
+### 🗄️ Database
+- [ ] Có file schema `Database/DrinkShopDB.sql` chuẩn.
+- [ ] Có file dữ liệu mẫu `Database/SampleData.sql`.
+- [ ] Các khóa chính (PK), khóa ngoại (FK) và kiểu dữ liệu đã được thống nhất.
+- [ ] Cả 3 thành viên kết nối được database thành công từ ứng dụng.
+- [ ] Không lưu mật khẩu thật trong Git.
 
-### 11.2. Quy chuẩn viết mã C# (Code Conventions)
-- **Đặt tên Class, Method, Property**: Sử dụng kiểu `PascalCase` (ví dụ: `ProductBLL`, `GetAllProducts()`, `UnitPrice`).
-- **Đặt tên biến cục bộ và tham số**: Sử dụng kiểu `camelCase` (ví dụ: `productId`, `totalAmount`).
-- **Đặt tên Interface**: Bắt đầu bằng chữ `I` (ví dụ: `IRepository<T>`).
-- **Truy vấn SQL an toàn**: Tuyệt đối dùng `SqlParameter`, không nối chuỗi trực tiếp từ ô nhập (`txtSearch.Text`):
-  ```csharp
-  // ✅ ĐÚNG: Chống SQL Injection
-  cmd.CommandText = "SELECT * FROM Products WHERE ProductName LIKE @name";
-  cmd.Parameters.AddWithValue("@name", "%" + keyword + "%");
-  
-  // ❌ SAI: Dễ bị hack SQL Injection
-  cmd.CommandText = "SELECT * FROM Products WHERE ProductName LIKE '%" + keyword + "%'";
-  ```
-- **Quản lý tài nguyên**: Mọi đối tượng `SqlConnection`, `SqlCommand`, `SqlDataReader` bắt buộc phải bọc trong khối `using (...)` để tự động giải phóng kết nối về Connection Pool.
-- **Xử lý thông báo**: Hiển thị thông báo bằng `MessageBox.Show()` rõ ràng, thân thiện bằng tiếng Việt.
-
----
-
-## 12. 📋 CHECKLIST KIỂM THỬ TRƯỚC KHI BÀN GIAO
-
-### ⚙️ Môi trường & Mã nguồn
-- [ ] Cả 3 máy thành viên cài đặt Visual Studio 2022 và workload *.NET Desktop Development*.
-- [ ] Thống nhất phiên bản `.NET 8.0 Windows Desktop`.
-- [ ] Cả 3 thành viên clone repository thành công và build không có bất kỳ warning/error nghiêm trọng nào.
-- [ ] File `.gitignore` hoạt động tốt, không đẩy file rác lên GitHub.
-
-### 🗄️ Cơ sở dữ liệu
-- [ ] Chạy file script `DrinkShopDB.sql` tạo đầy đủ 7 bảng, PK, FK và Unique Index.
-- [ ] Chạy file script `SampleData.sql` tạo tài khoản admin, nhân viên và thực đơn mẫu.
-- [ ] Cả nhóm kết nối được SQL Server thành công từ `App.config`.
-- [ ] Dữ liệu tiếng Việt hiển thị chuẩn không bị lỗi font nhờ kiểu `NVARCHAR` và Collation `Vietnamese_CI_AS`.
-
-### 🎯 Nghiệp vụ & Chức năng
-- [ ] Đăng nhập thành công với tài khoản Admin và Nhân viên, kiểm tra phân quyền đúng.
-- [ ] Chức năng CRUD Danh mục và Đồ uống hoạt động mượt mà, validate giá tiền > 0.
-- [ ] Sơ đồ bàn hiển thị đúng màu theo trạng thái (Xanh - Trống, Đỏ - Có khách).
-- [ ] Bán hàng POS: Chọn bàn -> Thêm món -> Tăng giảm số lượng -> Giảm giá -> Tính tiền thừa chuẩn xác.
-- [ ] Thanh toán cập nhật hóa đơn sang 'Đã thanh toán' và giải phóng bàn về 'Trống' ngay lập tức.
-- [ ] Chức năng chuyển bàn và gộp bàn hoạt động chính xác, không làm mất món của khách.
-- [ ] Tra cứu lịch sử hóa đơn và xem lại chi tiết hóa đơn cũ.
+### 🎯 Chức năng
+- [ ] Đăng nhập đúng/sai thông báo rõ ràng, phân quyền chuẩn (Admin / Thu ngân).
+- [ ] CRUD danh mục đồ uống và sản phẩm đồ uống hoạt động chuẩn xác.
+- [ ] Tìm kiếm dữ liệu sản phẩm, hóa đơn hoạt động mượt mà.
+- [ ] Đổi trạng thái bàn chính xác (*Trống* -> *Có khách* -> *Trống*).
+- [ ] Bán hàng POS: Gọi món, tăng/giảm số lượng, ghi chú món, tính tổng tiền, chiết khấu và tiền thừa chuẩn xác.
+- [ ] Không cho phép thanh toán đơn hàng khi chưa chọn món.
+- [ ] Dữ liệu hóa đơn và chi tiết hóa đơn nhất quán, có thể in lại.
 - [ ] Thống kê doanh thu và hiển thị biểu đồ trực quan.
 
+### 🚀 Tích hợp
+- [ ] Tất cả Form được mở trơn tru từ `FrmMain` nhúng vào Panel nội dung.
+- [ ] Không có lỗi build (0 Error, 0 Warning nghiêm trọng).
+- [ ] Không có lỗi kết nối database khi chạy ứng dụng.
+- [ ] Kiểm thử luồng bán hàng từ đầu đến cuối thành công.
+- [ ] Nhánh `main` chứa phiên bản ổn định nhất sẵn sàng báo cáo.
+
 ---
 
-## 13. 🚀 HƯỚNG DẪN CÀI ĐẶT VÀ CHẠY DỰ ÁN (SETUP & RUN GUIDE)
+## 12. Hướng dẫn chạy dự án
 
-1. **Cài đặt phần mềm cần thiết**:
-   - Visual Studio 2022 Community (chọn gói *.NET desktop development*).
-   - Microsoft SQL Server 2019/2022 hoặc SQL Server Express.
-   - SQL Server Management Studio (SSMS).
-2. **Clone mã nguồn về máy**:
+1. Cài đặt **Visual Studio Community 2022** và workload *.NET desktop development*.
+2. Cài đặt **Microsoft SQL Server** (2019/2022 hoặc Express) và **SSMS**.
+3. Clone repository về máy:
    ```bash
-   git clone <URL_REPO_GITHUB>
+   git clone <GITHUB_REPOSITORY_URL>
    cd drink-shop-management
    ```
-3. **Thiết lập Cơ sở dữ liệu**:
-   - Mở SSMS, kết nối vào SQL Server của bạn.
-   - Mở và chạy file `Database/DrinkShopDB.sql`.
-   - Mở và chạy tiếp file `Database/SampleData.sql`.
-4. **Cấu hình chuỗi kết nối**:
-   - Mở Solution `DrinkShopManagement.sln` bằng Visual Studio 2022.
-   - Mở file `DrinkShop.GUI/App.config`.
-   - Chỉnh sửa lại thuộc tính `Server=...` cho khớp với tên SQL Server Instance trên máy của bạn.
-5. **Chọn Startup Project**:
-   - Click chuột phải vào project `DrinkShop.GUI` trong cửa sổ Solution Explorer -> chọn **Set as Startup Project**.
-6. **Build và Chạy ứng dụng**:
-   - Nhấn phím `Ctrl + Shift + B` để build toàn bộ solution.
-   - Nhấn phím `F5` (hoặc nút Start) để khởi chạy ứng dụng.
-7. **Tài khoản đăng nhập mặc định**:
-   - **Tài khoản Quản trị viên (Admin)**: `admin` / Mật khẩu: `admin123`
-   - **Tài khoản Thu ngân (Staff)**: `cashier01` / Mật khẩu: `123456`
+4. Mở file `DrinkShop.sln` bằng Visual Studio.
+5. Mở SSMS, kết nối đến SQL Server cục bộ, chạy script `Database/DrinkShopDB.sql`, sau đó chạy `Database/SampleData.sql`.
+6. Mở file `DrinkShop.GUI/App.config` và cấu hình lại chuỗi kết nối `DrinkShopConn` cho khớp với SQL Server của bạn.
+7. Click chuột phải vào project `DrinkShop.GUI` trong Solution Explorer -> chọn **Set as Startup Project**.
+8. Build Solution (`Ctrl + Shift + B`) và nhấn **F5** để khởi chạy ứng dụng.
+
+*Nếu gặp lỗi, kiểm tra lần lượt: SQL Server Service đã Start chưa, tên Server trong App.config có đúng không, NuGet packages đã restore đủ chưa, và Startup Project đã chọn đúng DrinkShop.GUI chưa.*
 
 ---
 
-## 14. 🤝 NGUYÊN TẮC PHỐI HỢP LÀM VIỆC NHÓM
+## 13. Nguyên tắc phối hợp của nhóm
 
-1. **Thống nhất thiết kế Database trước khi viết code**: Mọi thay đổi về tên bảng, thêm bớt cột phải được trưởng nhóm cập nhật vào file `Database/DrinkShopDB.sql` và thông báo cho 2 thành viên trước khi chỉnh sửa code.
-2. **Trách nhiệm theo module**: Mỗi thành viên chịu trách nhiệm hoàn thiện trọn vẹn cả tầng GUI, BLL, DAL và DTO trong phạm vi phân công của mình.
-3. **Tôn trọng mã nguồn của nhau**: Thành viên phụ trách tích hợp không tự ý xóa sửa logic code của thành viên khác khi chưa trao đổi.
-4. **Tích hợp liên tục (Continuous Integration)**: Thường xuyên merge code từ `develop` về nhánh cá nhân để kiểm thử, tránh dồn ứ code đến sát ngày nộp đồ án.
-5. **Mục tiêu cốt lõi**: Cả nhóm cùng hoàn thiện một sản phẩm phần mềm chất lượng cao, chạy ổn định, giao diện đẹp mắt và tự tin đạt điểm xuất sắc trong buổi bảo vệ môn học.
+1. **Thống nhất thiết kế database trước khi code chức năng**: Mọi chức năng phụ thuộc vào dữ liệu đều phải chờ schema được chốt.
+2. **Thống nhất quy ước chung**: Tên bảng, tên cột, namespace `DrinkShop`, tên project và quy ước đặt tên code.
+3. **Trách nhiệm toàn diện**: Mỗi thành viên chịu trách nhiệm hoàn thiện cả GUI, BLL, DAL và DTO trong phạm vi chức năng được giao.
+4. **Tôn trọng mã nguồn của nhau**: Thành viên phụ trách tích hợp không tự ý thay đổi code của người khác khi chưa trao đổi.
+5. **Minh bạch thông tin**: Mọi thay đổi ảnh hưởng đến toàn hệ thống phải được thông báo ngay trong nhóm chat.
+6. **Thường xuyên tích hợp và kiểm thử**: Merge code thường xuyên, không đợi đến sát ngày nộp đồ án mới ghép code.
 
----
-
+> **Mục tiêu cuối cùng:** Cả nhóm cùng phát triển một ứng dụng **Drink Shop Management System** hoàn chỉnh, thống nhất, dùng chung một schema SQL Server và có thể clone repository về bất kỳ máy tính nào để build và chạy mượt mà theo đúng hướng dẫn trên.
