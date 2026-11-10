@@ -1,0 +1,144 @@
+IF DB_ID(N'DrinkShopDB') IS NULL
+BEGIN
+	CREATE DATABASE DrinkShopDB COLLATE Vietnamese_CI_AS;
+END;
+GO
+
+USE DrinkShopDB;
+GO
+
+IF OBJECT_ID(N'dbo.Quyen', N'U') IS NULL
+BEGIN
+	CREATE TABLE dbo.Quyen
+	(
+		MaQuyen INT IDENTITY(1,1) NOT NULL CONSTRAINT PK_Quyen PRIMARY KEY,
+		TenQuyen NVARCHAR(50) NOT NULL CONSTRAINT UQ_Quyen_TenQuyen UNIQUE
+	);
+END;
+GO
+
+IF OBJECT_ID(N'dbo.TaiKhoan', N'U') IS NULL
+BEGIN
+	CREATE TABLE dbo.TaiKhoan
+	(
+		MaTaiKhoan INT IDENTITY(1,1) NOT NULL CONSTRAINT PK_TaiKhoan PRIMARY KEY,
+		TenDangNhap VARCHAR(50) NOT NULL CONSTRAINT UQ_TaiKhoan_TenDangNhap UNIQUE,
+		MatKhau VARCHAR(255) NOT NULL,
+		MaQuyen INT NOT NULL,
+		TrangThai BIT NOT NULL CONSTRAINT DF_TaiKhoan_TrangThai DEFAULT (1),
+		CONSTRAINT FK_TaiKhoan_Quyen FOREIGN KEY (MaQuyen) REFERENCES dbo.Quyen(MaQuyen) ON DELETE NO ACTION
+	);
+END;
+GO
+
+IF OBJECT_ID(N'dbo.NhanVien', N'U') IS NULL
+BEGIN
+	CREATE TABLE dbo.NhanVien
+	(
+		MaNV INT IDENTITY(1,1) NOT NULL CONSTRAINT PK_NhanVien PRIMARY KEY,
+		HoTen NVARCHAR(100) NOT NULL,
+		SoDienThoai VARCHAR(15) NOT NULL,
+		Email VARCHAR(100) NOT NULL,
+		MaTaiKhoan INT NOT NULL,
+		CONSTRAINT UQ_NhanVien_MaTaiKhoan UNIQUE (MaTaiKhoan),
+		CONSTRAINT FK_NhanVien_TaiKhoan FOREIGN KEY (MaTaiKhoan) REFERENCES dbo.TaiKhoan(MaTaiKhoan) ON DELETE NO ACTION
+	);
+END;
+GO
+
+IF OBJECT_ID(N'dbo.DanhMuc', N'U') IS NULL
+BEGIN
+	CREATE TABLE dbo.DanhMuc
+	(
+		MaDanhMuc INT IDENTITY(1,1) NOT NULL CONSTRAINT PK_DanhMuc PRIMARY KEY,
+		TenDanhMuc NVARCHAR(100) NOT NULL CONSTRAINT UQ_DanhMuc_TenDanhMuc UNIQUE,
+		TrangThai BIT NOT NULL CONSTRAINT DF_DanhMuc_TrangThai DEFAULT (1)
+	);
+END;
+GO
+
+IF OBJECT_ID(N'dbo.SanPham', N'U') IS NULL
+BEGIN
+	CREATE TABLE dbo.SanPham
+	(
+		MaSanPham INT IDENTITY(1,1) NOT NULL CONSTRAINT PK_SanPham PRIMARY KEY,
+		TenSanPham NVARCHAR(150) NOT NULL,
+		MaDanhMuc INT NOT NULL,
+		DonGia DECIMAL(18,0) NOT NULL,
+		HinhAnh NVARCHAR(255) NULL,
+		TrangThai BIT NOT NULL CONSTRAINT DF_SanPham_TrangThai DEFAULT (1),
+		CONSTRAINT CK_SanPham_DonGia CHECK (DonGia >= 0),
+		CONSTRAINT FK_SanPham_DanhMuc FOREIGN KEY (MaDanhMuc) REFERENCES dbo.DanhMuc(MaDanhMuc) ON DELETE NO ACTION
+	);
+END;
+GO
+
+IF OBJECT_ID(N'dbo.Ban', N'U') IS NULL
+BEGIN
+	CREATE TABLE dbo.Ban
+	(
+		MaBan INT IDENTITY(1,1) NOT NULL CONSTRAINT PK_Ban PRIMARY KEY,
+		TenBan NVARCHAR(50) NOT NULL CONSTRAINT UQ_Ban_TenBan UNIQUE,
+		TrangThai NVARCHAR(50) NOT NULL CONSTRAINT DF_Ban_TrangThai DEFAULT (N'Trống'),
+		CONSTRAINT CK_Ban_TrangThai CHECK (TrangThai IN (N'Trống', N'Có khách', N'Đã đặt'))
+	);
+END;
+GO
+
+IF OBJECT_ID(N'dbo.HoaDon', N'U') IS NULL
+BEGIN
+	CREATE TABLE dbo.HoaDon
+	(
+		MaHoaDon INT IDENTITY(1,1) NOT NULL CONSTRAINT PK_HoaDon PRIMARY KEY,
+		MaBan INT NOT NULL,
+		MaNV INT NOT NULL,
+		NgayTao DATETIME NOT NULL CONSTRAINT DF_HoaDon_NgayTao DEFAULT (GETDATE()),
+		TongTien DECIMAL(18,0) NOT NULL CONSTRAINT DF_HoaDon_TongTien DEFAULT (0),
+		GiamGia INT NOT NULL CONSTRAINT DF_HoaDon_GiamGia DEFAULT (0),
+		TienKhachDua DECIMAL(18,0) NOT NULL CONSTRAINT DF_HoaDon_TienKhachDua DEFAULT (0),
+		TienThoi DECIMAL(18,0) NOT NULL CONSTRAINT DF_HoaDon_TienThoi DEFAULT (0),
+		PhuongThucThanhToan NVARCHAR(50) NULL,
+		TrangThai NVARCHAR(50) NOT NULL CONSTRAINT DF_HoaDon_TrangThai DEFAULT (N'Chưa thanh toán'),
+		CONSTRAINT CK_HoaDon_TongTien CHECK (TongTien >= 0),
+		CONSTRAINT CK_HoaDon_GiamGia CHECK (GiamGia >= 0),
+		CONSTRAINT FK_HoaDon_Ban FOREIGN KEY (MaBan) REFERENCES dbo.Ban(MaBan) ON DELETE NO ACTION,
+		CONSTRAINT FK_HoaDon_NhanVien FOREIGN KEY (MaNV) REFERENCES dbo.NhanVien(MaNV) ON DELETE NO ACTION
+	);
+END;
+GO
+
+IF OBJECT_ID(N'dbo.ChiTietHoaDon', N'U') IS NULL
+BEGIN
+	CREATE TABLE dbo.ChiTietHoaDon
+	(
+		MaCTHD INT IDENTITY(1,1) NOT NULL CONSTRAINT PK_ChiTietHoaDon PRIMARY KEY,
+		MaHoaDon INT NOT NULL,
+		MaSanPham INT NOT NULL,
+		SoLuong INT NOT NULL,
+		DonGia DECIMAL(18,0) NOT NULL,
+		ThanhTien DECIMAL(18,0) NOT NULL,
+		GhiChu NVARCHAR(255) NULL,
+		CONSTRAINT CK_ChiTietHoaDon_SoLuong CHECK (SoLuong > 0),
+		CONSTRAINT CK_ChiTietHoaDon_DonGia CHECK (DonGia >= 0),
+		CONSTRAINT CK_ChiTietHoaDon_ThanhTien CHECK (ThanhTien >= 0),
+		CONSTRAINT FK_ChiTietHoaDon_HoaDon FOREIGN KEY (MaHoaDon) REFERENCES dbo.HoaDon(MaHoaDon) ON DELETE NO ACTION,
+		CONSTRAINT FK_ChiTietHoaDon_SanPham FOREIGN KEY (MaSanPham) REFERENCES dbo.SanPham(MaSanPham) ON DELETE NO ACTION
+	);
+END;
+GO
+
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = N'IX_SanPham_TenSanPham' AND object_id = OBJECT_ID(N'dbo.SanPham'))
+	CREATE INDEX IX_SanPham_TenSanPham ON dbo.SanPham(TenSanPham);
+GO
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = N'IX_NhanVien_SoDienThoai' AND object_id = OBJECT_ID(N'dbo.NhanVien'))
+	CREATE INDEX IX_NhanVien_SoDienThoai ON dbo.NhanVien(SoDienThoai);
+GO
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = N'IX_HoaDon_NgayTao' AND object_id = OBJECT_ID(N'dbo.HoaDon'))
+	CREATE INDEX IX_HoaDon_NgayTao ON dbo.HoaDon(NgayTao);
+GO
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = N'IX_NhanVien_HoTen' AND object_id = OBJECT_ID(N'dbo.NhanVien'))
+	CREATE INDEX IX_NhanVien_HoTen ON dbo.NhanVien(HoTen);
+GO
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = N'IX_TaiKhoan_MaQuyen' AND object_id = OBJECT_ID(N'dbo.TaiKhoan'))
+	CREATE INDEX IX_TaiKhoan_MaQuyen ON dbo.TaiKhoan(MaQuyen);
+GO

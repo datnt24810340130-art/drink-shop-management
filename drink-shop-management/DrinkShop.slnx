@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="DrinkShop.DTO/DrinkShop.DTO.csproj" />
+  <Project Path="DrinkShop.DAL/DrinkShop.DAL.csproj" />
+  <Project Path="DrinkShop.BLL/DrinkShop.BLL.csproj" />
+  <Project Path="DrinkShop.GUI/DrinkShop.GUI.csproj" />
+</Solution>

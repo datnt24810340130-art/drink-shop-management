@@ -1,0 +1,30 @@
+## Visual Studio & .NET build artifacts
+.vs/
+**/bin/
+**/obj/
+**/Debug/
+**/Release/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.DotSettings.user
+
+## NuGet Packages
+*.nupkg
+packages/
+
+## SQL Server local databases
+*.mdf
+*.ldf
+
+## OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+
+## File ghi chú cá nhân (không đưa lên Git)
+HUONG_DAN_VA_BO_PROMPT_VS2022.md
+NHIEM_VU_NGUYEN_THANH_DAT.md
