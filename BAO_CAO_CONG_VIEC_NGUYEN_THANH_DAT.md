@@ -67,17 +67,17 @@ Nguyễn Thành Đạt đã đóng gói toàn bộ logic giao tiếp với SQL S
 ### 4. Xây dựng Phân hệ Xác thực & Quản lý Phiên làm việc (Authentication & Session)
 Nguyễn Thành Đạt đã hoàn thiện trọn vẹn từ tầng dữ liệu đến giao diện đăng nhập:
 - **Tầng DTO**:
-  - `DrinkShop.DTO/TaiKhoanDTO.cs`: Định nghĩa thực thể tài khoản.
-  - `DrinkShop.DTO/QuyenDTO.cs`: Định nghĩa thực thể quyền hạn.
+  - `DrinkShop.DTO/Authentication/TaiKhoanDTO.cs`: Định nghĩa thực thể tài khoản.
+  - `DrinkShop.DTO/Authentication/QuyenDTO.cs`: Định nghĩa thực thể quyền hạn.
 - **Tầng DAL**:
-  - `DrinkShop.DAL/TaiKhoanDAL.cs`: Hàm `KiemTraDangNhap(string username, string password)` truy vấn chính xác thông tin đăng nhập từ SQL Server.
+  - `DrinkShop.DAL/Authentication/TaiKhoanDAL.cs`: Hàm `KiemTraDangNhap(string username, string password)` truy vấn chính xác thông tin đăng nhập từ SQL Server.
 - **Tầng BLL**:
-  - `DrinkShop.BLL/TaiKhoanBLL.cs`:
+  - `DrinkShop.BLL/Authentication/TaiKhoanBLL.cs`:
     - Kiểm tra tính hợp lệ: Tên đăng nhập và mật khẩu không được rỗng.
     - Kiểm tra trạng thái tài khoản: Nếu tài khoản bị khóa (`TrangThai == 0`) thì chặn và thông báo lỗi.
 - **Tầng GUI & Helper**:
   - `DrinkShop.GUI/Helpers/UserSession.cs`: Quản lý phiên đăng nhập toàn cục (`MaTaiKhoan`, `TenDangNhap`, `HoTen`, `TenQuyen`, `MaQuyen`).
-  - `DrinkShop.GUI/Forms/FrmLogin.cs`: Giao diện đăng nhập phẳng hiện đại (Modern Flat UI), hỗ trợ ẩn/hiện mật khẩu, phím nóng `Enter` đăng nhập, hiển thị thông báo lỗi thân thiện. Khi đăng nhập thành công sẽ lưu phiên và mở giao diện chính `FrmMain`.
+  - `DrinkShop.GUI/Forms/Authentication/FrmLogin.cs`: Giao diện đăng nhập phẳng hiện đại (Modern Flat UI), hỗ trợ ẩn/hiện mật khẩu, phím nóng `Enter` đăng nhập, hiển thị thông báo lỗi thân thiện. Khi đăng nhập thành công sẽ lưu phiên và mở giao diện chính `FrmMain`.
 
 ---
 
@@ -85,7 +85,7 @@ Nguyễn Thành Đạt đã hoàn thiện trọn vẹn từ tầng dữ liệu �
 Nguyễn Thành Đạt đã xây dựng "bộ khung xương" cho toàn bộ phần mềm để tạo trải nghiệm ứng dụng desktop chuyên nghiệp:
 - **File `DrinkShop.GUI/Helpers/FormHelper.cs`**:
   - Viết hàm `OpenChildForm(Form childForm, Panel targetPanel)` nhúng form con mượt mà vào Panel nội dung, tự động giải phóng form cũ (`Dispose`) tránh rò rỉ bộ nhớ.
-- **File `DrinkShop.GUI/Forms/FrmMain.cs`**:
+- **File `DrinkShop.GUI/Forms/Main/FrmMain.cs`**:
   - **Thanh Sidebar bên trái** (màu tối sang trọng `#1E272C`): Chứa logo thương hiệu và các nút chức năng (*Dashboard, Bán hàng, Bàn, Đồ uống, Danh mục, Hóa đơn, Nhân viên, Thống kê, Đăng xuất*).
   - **Thanh Header bên trên**: Hiển thị tiêu đề trang, đồng hồ thời gian thực (`Timer`) và thông tin nhân viên đang đăng nhập (*"Xin chào: Họ Tên [Vai trò]"*).
   - **Panel nội dung ở giữa (`pnlContent`)**: Vùng chứa động để nhúng các Form con.
@@ -97,20 +97,20 @@ Nguyễn Thành Đạt đã xây dựng "bộ khung xương" cho toàn bộ ph�
 ### 6. Xây dựng Phân hệ Quản lý Nhân viên & Tài khoản (`FrmNhanVien.cs`)
 Nguyễn Thành Đạt đã hoàn thành đầy đủ chu trình CRUD nghiệp vụ thực tế:
 - **Tầng DTO**:
-  - `DrinkShop.DTO/NhanVienDTO.cs`: Mô hình nhân viên đầy đủ thông tin cá nhân và tài khoản.
+  - `DrinkShop.DTO/Employees/NhanVienDTO.cs`: Mô hình nhân viên đầy đủ thông tin cá nhân và tài khoản.
 - **Tầng DAL**:
-  - `DrinkShop.DAL/NhanVienDAL.cs`:
+  - `DrinkShop.DAL/Employees/NhanVienDAL.cs`:
     - `GetAllNhanVien()`: Lấy danh sách nhân viên kèm vai trò.
     - `InsertNhanVien(NhanVienDTO nv, TaiKhoanDTO tk)`: Sử dụng **`SqlTransaction`** để thêm đồng thời cả nhân viên và tài khoản, đảm bảo tính toàn vẹn tuyệt đối.
     - `UpdateNhanVien(NhanVienDTO nv)`: Cập nhật thông tin nhân viên và tài khoản.
     - `DoiTrangThai(int maNV, int trangThai)`: Khóa hoặc mở khóa tài khoản nhân viên.
     - `SearchNhanVien(string keyword)`: Tìm kiếm nhân viên linh hoạt theo tên, số điện thoại hoặc username.
 - **Tầng BLL**:
-  - `DrinkShop.BLL/NhanVienBLL.cs`:
+  - `DrinkShop.BLL/Employees/NhanVienBLL.cs`:
     - Kiểm tra họ tên bắt buộc, số điện thoại chuẩn 10 chữ số, định dạng email hợp lệ.
     - Kiểm tra chống trùng lặp tên đăng nhập trong hệ thống.
     - Kiểm tra độ dài mật khẩu an toàn.
-- **Tầng GUI (`FrmNhanVien.cs`)**:
+- **Tầng GUI (`DrinkShop.GUI/Forms/Employees/FrmNhanVien.cs`)**:
   - Bảng `dgvNhanVien` hiển thị trực quan thông tin nhân sự.
   - Bộ điều khiển nhập liệu đầy đủ, ComboBox quyền hạn load trực tiếp từ CSDL.
   - Các nút thao tác nghiệp vụ: *Thêm, Sửa, Khóa/Mở, Lưu, Hủy, Làm mới*.
@@ -119,27 +119,47 @@ Nguyễn Thành Đạt đã hoàn thành đầy đủ chu trình CRUD nghiệp v
 
 ---
 
+### 7. Tái cấu trúc Solution theo Kiến trúc 6 Module chuyên nghiệp & Khởi tạo Khung làm việc nhóm
+Nguyễn Thành Đạt đã tiến hành tái cấu trúc toàn diện mã nguồn theo mô hình module phân hệ (Feature-based Modular Architecture) và chuẩn bị khung xương hoàn chỉnh cho cả nhóm:
+- **Phân chia đồng bộ 6 module nghiệp vụ** xuyên suốt cả 4 tầng dự án (`DTO`, `DAL`, `BLL`, `GUI/Forms`):
+  1. `Authentication`: Xác thực, đăng nhập và phân quyền.
+  2. `Main`: Điều hướng và khung giao diện chính.
+  3. `Employees`: Quản lý nhân viên và tài khoản.
+  4. `Products`: Danh mục thực đơn và danh sách món nước.
+  5. `Tables`: Sơ đồ bàn và trạng thái phục vụ.
+  6. `Transactions`: Bán hàng POS và hóa đơn thanh toán.
+  7. `Reports`: Báo cáo doanh thu và biểu đồ thống kê.
+- **Khởi tạo sẵn khung làm việc (Skeleton/Stubs) cho 2 thành viên còn lại**:
+  - Khởi tạo đầy đủ các DTO, DAL, BLL stub: `DanhMuc`, `SanPham`, `Ban`, `HoaDon`, `ChiTietHoaDon`, `ThongKe`.
+  - Khởi tạo trọn bộ giao diện Form cơ bản (mỗi Form đầy đủ 3 file `.cs`, `.Designer.cs`, `.resx`): `FrmDanhMuc`, `FrmSanPham`, `FrmBan`, `FrmBanHang`, `FrmHoaDon`, `FrmThongKe`.
+  - Khởi tạo thư mục `DrinkShop.GUI/UserControls/` phục vụ các thẻ hiển thị bàn và món nước tự tạo.
+- **Nghiệm thu kiến trúc**: Toàn bộ Solution biên dịch chuẩn xác 100% (**`0 Warning, 0 Error`**).
+
+---
+
 ## 📊 BẢNG TỔNG HỢP KIỂM KÊ FILE NGUYỄN THÀNH ĐẠT ĐÃ XÂY DỰNG
 
-| STT | Tên File | Vị trí thư mục | Nhiệm vụ / Mục đích |
+| STT | Tên File | Vị trí thư mục theo Module | Nhiệm vụ / Mục đích |
 | :---: | :--- | :--- | :--- |
 | 1 | `DrinkShopDB.sql` | `Database/` | Kịch bản tạo Database 8 bảng và ràng buộc |
 | 2 | `SampleData.sql` | `Database/` | Kịch bản nạp dữ liệu mẫu ban đầu |
-| 3 | `App.config` | `DrinkShop.GUI/` | Cấu hình chuỗi kết nối SQL Server |
-| 4 | `DatabaseHelper.cs` | `DrinkShop.DAL/Database/` | Bộ công cụ truy vấn ADO.NET thuần |
-| 5 | `TaiKhoanDTO.cs` | `DrinkShop.DTO/` | Mô hình dữ liệu Tài khoản |
-| 6 | `QuyenDTO.cs` | `DrinkShop.DTO/` | Mô hình dữ liệu Quyền hạn |
-| 7 | `NhanVienDTO.cs` | `DrinkShop.DTO/` | Mô hình dữ liệu Nhân viên |
-| 8 | `TaiKhoanDAL.cs` | `DrinkShop.DAL/` | Truy vấn dữ liệu đăng nhập |
-| 9 | `NhanVienDAL.cs` | `DrinkShop.DAL/` | Truy vấn CRUD nhân viên & SqlTransaction |
-| 10 | `TaiKhoanBLL.cs` | `DrinkShop.BLL/` | Logic kiểm tra đăng nhập & phân quyền |
-| 11 | `NhanVienBLL.cs` | `DrinkShop.BLL/` | Logic kiểm tra hợp lệ nhân viên |
-| 12 | `UserSession.cs` | `DrinkShop.GUI/Helpers/` | Quản lý phiên làm việc của nhân viên |
-| 13 | `FormHelper.cs` | `DrinkShop.GUI/Helpers/` | Xử lý nhúng Form con vào Master UI |
-| 14 | `FrmLogin.cs` | `DrinkShop.GUI/Forms/` | Màn hình Đăng nhập hệ thống |
-| 15 | `FrmMain.cs` | `DrinkShop.GUI/Forms/` | Màn hình Khung chính (Sidebar, Header, Host) |
-| 16 | `FrmNhanVien.cs` | `DrinkShop.GUI/Forms/` | Màn hình Quản lý Nhân viên & Tài khoản |
-| 17 | `Program.cs` | `DrinkShop.GUI/` | Điểm khởi chạy ứng dụng WinForms |
+| 3 | `DrinkShop.sln` | `drink-shop-management/` | File Solution chuẩn của dự án |
+| 4 | `App.config` | `DrinkShop.GUI/` | Cấu hình chuỗi kết nối SQL Server |
+| 5 | `DatabaseHelper.cs` | `DrinkShop.DAL/Database/` | Bộ công cụ truy vấn ADO.NET thuần dùng chung |
+| 6 | `TaiKhoanDTO.cs` | `DrinkShop.DTO/Authentication/` | Mô hình dữ liệu Tài khoản |
+| 7 | `QuyenDTO.cs` | `DrinkShop.DTO/Authentication/` | Mô hình dữ liệu Quyền hạn |
+| 8 | `NhanVienDTO.cs` | `DrinkShop.DTO/Employees/` | Mô hình dữ liệu Nhân viên |
+| 9 | `TaiKhoanDAL.cs` | `DrinkShop.DAL/Authentication/` | Truy vấn dữ liệu đăng nhập |
+| 10 | `NhanVienDAL.cs` | `DrinkShop.DAL/Employees/` | Truy vấn CRUD nhân viên & SqlTransaction |
+| 11 | `TaiKhoanBLL.cs` | `DrinkShop.BLL/Authentication/` | Logic kiểm tra đăng nhập & phân quyền |
+| 12 | `NhanVienBLL.cs` | `DrinkShop.BLL/Employees/` | Logic kiểm tra hợp lệ nhân viên |
+| 13 | `UserSession.cs` | `DrinkShop.GUI/Helpers/` | Quản lý phiên làm việc của nhân viên |
+| 14 | `FormHelper.cs` | `DrinkShop.GUI/Helpers/` | Xử lý nhúng Form con vào Master UI |
+| 15 | `FrmLogin.cs` / `.Designer.cs` / `.resx` | `DrinkShop.GUI/Forms/Authentication/` | Màn hình Đăng nhập hệ thống |
+| 16 | `FrmMain.cs` / `.Designer.cs` / `.resx` | `DrinkShop.GUI/Forms/Main/` | Màn hình Khung chính (Sidebar, Header, Host) |
+| 17 | `FrmNhanVien.cs` / `.Designer.cs` / `.resx` | `DrinkShop.GUI/Forms/Employees/` | Màn hình Quản lý Nhân viên & Tài khoản |
+| 18 | `Program.cs` | `DrinkShop.GUI/` | Điểm khởi chạy ứng dụng WinForms |
+| 19 | *Các file DTO, DAL, BLL, Form khung cho nhóm* | `DTO/`, `DAL/`, `BLL/`, `GUI/` | Khung sườn kiến trúc 6 module cho Hiếu & Tuấn Anh |
 
 ---
 

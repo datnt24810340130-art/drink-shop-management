@@ -88,50 +88,83 @@ DrinkShop/
 │
 ├── DrinkShop.GUI/
 │   ├── Forms/
-│   │   ├── FrmLogin.cs
-│   │   ├── FrmMain.cs
-│   │   ├── FrmNhanVien.cs
-│   │   ├── FrmDanhMuc.cs
-│   │   ├── FrmSanPham.cs
-│   │   ├── FrmBan.cs
-│   │   ├── FrmBanHang.cs
-│   │   ├── FrmHoaDon.cs
-│   │   └── FrmThongKe.cs
+│   │   ├── Authentication/            # Phân hệ Xác thực & Đăng nhập
+│   │   │   ├── FrmLogin.cs
+│   │   │   ├── FrmLogin.Designer.cs
+│   │   │   └── FrmLogin.resx
+│   │   ├── Main/                      # Màn hình chính & Điều hướng
+│   │   │   ├── FrmMain.cs
+│   │   │   ├── FrmMain.Designer.cs
+│   │   │   └── FrmMain.resx
+│   │   ├── Employees/                 # Phân hệ Quản lý Nhân sự
+│   │   │   ├── FrmNhanVien.cs
+│   │   │   ├── FrmNhanVien.Designer.cs
+│   │   │   └── FrmNhanVien.resx
+│   │   ├── Products/                  # Phân hệ Thực đơn & Đồ uống
+│   │   │   ├── FrmDanhMuc.cs / .Designer.cs / .resx
+│   │   │   └── FrmSanPham.cs / .Designer.cs / .resx
+│   │   ├── Tables/                    # Phân hệ Sơ đồ bàn
+│   │   │   └── FrmBan.cs / .Designer.cs / .resx
+│   │   ├── Transactions/              # Phân hệ POS Bán hàng & Hóa đơn
+│   │   │   ├── FrmBanHang.cs / .Designer.cs / .resx
+│   │   │   └── FrmHoaDon.cs / .Designer.cs / .resx
+│   │   └── Reports/                   # Phân hệ Thống kê & Báo cáo
+│   │       └── FrmThongKe.cs / .Designer.cs / .resx
 │   ├── Helpers/
-│   │   └── FormHelper.cs              # Hỗ trợ nhúng Form vào Panel nội dung
+│   │   ├── FormHelper.cs              # Hỗ trợ nhúng Form vào Panel nội dung
+│   │   └── UserSession.cs             # Quản lý phiên làm việc người dùng
 │   ├── UserControls/                  # Các thẻ hiển thị bàn, món nước
 │   ├── Program.cs
 │   └── App.config
 │
 ├── DrinkShop.BLL/
-│   ├── TaiKhoanBLL.cs
-│   ├── NhanVienBLL.cs
-│   ├── DanhMucBLL.cs
-│   ├── SanPhamBLL.cs
-│   ├── BanBLL.cs
-│   ├── HoaDonBLL.cs
-│   └── ThongKeBLL.cs
+│   ├── Authentication/
+│   │   └── TaiKhoanBLL.cs
+│   ├── Employees/
+│   │   └── NhanVienBLL.cs
+│   ├── Products/
+│   │   ├── DanhMucBLL.cs
+│   │   └── SanPhamBLL.cs
+│   ├── Tables/
+│   │   └── BanBLL.cs
+│   ├── Transactions/
+│   │   └── HoaDonBLL.cs
+│   └── Reports/
+│       └── ThongKeBLL.cs
 │
 ├── DrinkShop.DAL/
 │   ├── Database/
 │   │   └── DatabaseHelper.cs          # Quản lý kết nối SQL Server & thực thi câu lệnh
-│   ├── TaiKhoanDAL.cs
-│   ├── NhanVienDAL.cs
-│   ├── DanhMucDAL.cs
-│   ├── SanPhamDAL.cs
-│   ├── BanDAL.cs
-│   ├── HoaDonDAL.cs
-│   └── ThongKeDAL.cs
+│   ├── Authentication/
+│   │   └── TaiKhoanDAL.cs
+│   ├── Employees/
+│   │   └── NhanVienDAL.cs
+│   ├── Products/
+│   │   ├── DanhMucDAL.cs
+│   │   └── SanPhamDAL.cs
+│   ├── Tables/
+│   │   └── BanDAL.cs
+│   ├── Transactions/
+│   │   └── HoaDonDAL.cs
+│   └── Reports/
+│       └── ThongKeDAL.cs
 │
 ├── DrinkShop.DTO/
-│   ├── TaiKhoanDTO.cs
-│   ├── NhanVienDTO.cs
-│   ├── DanhMucDTO.cs
-│   ├── SanPhamDTO.cs
-│   ├── BanDTO.cs
-│   ├── HoaDonDTO.cs
-│   ├── ChiTietHoaDonDTO.cs
-│   └── ThongKeDTO.cs
+│   ├── Authentication/
+│   │   ├── TaiKhoanDTO.cs
+│   │   └── QuyenDTO.cs
+│   ├── Employees/
+│   │   └── NhanVienDTO.cs
+│   ├── Products/
+│   │   ├── DanhMucDTO.cs
+│   │   └── SanPhamDTO.cs
+│   ├── Tables/
+│   │   └── BanDTO.cs
+│   ├── Transactions/
+│   │   ├── HoaDonDTO.cs
+│   │   └── ChiTietHoaDonDTO.cs
+│   └── Reports/
+│       └── ThongKeDTO.cs
 │
 ├── Database/
 │   ├── DrinkShopDB.sql                # Script tạo Database, bảng, khóa chính, khóa ngoại
