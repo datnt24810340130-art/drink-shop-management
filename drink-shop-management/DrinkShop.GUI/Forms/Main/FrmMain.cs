@@ -48,32 +48,32 @@ public partial class FrmMain : Form
 
     private void BtnDashboard_Click(object? sender, EventArgs e)
     {
-        OpenPage("Dashboard", new NavigationPageForm("Dashboard", "Tổng quan hoạt động cửa hàng."));
+        OpenPage("Dashboard", new NavigationPageForm("Dashboard", "Tổng quan hoạt động cửa hàng Drink Shop."));
     }
 
     private void BtnBanHang_Click(object? sender, EventArgs e)
     {
-        OpenPage("Bán hàng", new NavigationPageForm("Bán hàng", "Phân hệ bán hàng sẽ được tích hợp tại đây."));
+        OpenPage("Bán hàng", new FrmBanHang());
     }
 
     private void BtnBan_Click(object? sender, EventArgs e)
     {
-        OpenPage("Bàn", new NavigationPageForm("Bàn", "Phân hệ quản lý bàn sẽ được tích hợp tại đây."));
+        OpenPage("Bàn", new FrmBan());
     }
 
     private void BtnSanPham_Click(object? sender, EventArgs e)
     {
-        OpenPage("Đồ uống", new NavigationPageForm("Đồ uống", "Phân hệ quản lý đồ uống sẽ được tích hợp tại đây."));
+        OpenPage("Đồ uống", new FrmSanPham());
     }
 
     private void BtnDanhMuc_Click(object? sender, EventArgs e)
     {
-        OpenPage("Danh mục", new NavigationPageForm("Danh mục", "Phân hệ quản lý danh mục sẽ được tích hợp tại đây."));
+        OpenPage("Danh mục", new FrmDanhMuc());
     }
 
     private void BtnHoaDon_Click(object? sender, EventArgs e)
     {
-        OpenPage("Hóa đơn", new NavigationPageForm("Hóa đơn", "Phân hệ hóa đơn sẽ được tích hợp tại đây."));
+        OpenPage("Hóa đơn", new FrmHoaDon());
     }
 
     private void BtnNhanVien_Click(object? sender, EventArgs e)
@@ -83,7 +83,7 @@ public partial class FrmMain : Form
 
     private void BtnThongKe_Click(object? sender, EventArgs e)
     {
-        OpenPage("Thống kê", new NavigationPageForm("Thống kê", "Phân hệ thống kê sẽ được tích hợp tại đây."));
+        OpenPage("Thống kê", new FrmThongKe());
     }
 
     private void BtnLogout_Click(object? sender, EventArgs e)
